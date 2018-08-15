@@ -113,15 +113,19 @@ export default class MopinionDeployment extends React.Component {
 
 				if ( await testRuleConditions(o, ev) ) {
 					//update(r)
-					captureScreen({
-						format: 'png',
-						quality: 0.8,
-						result:'base64'
-					})
-					.then(
-						uri => update(uri,o.rule_id),
-						error => update('',o.rule_id)
-					);
+					try {
+						captureScreen({
+							format: 'png',
+							quality: 0.8,
+							result:'base64'
+						})
+						.then(
+							uri => update(uri,o.rule_id),
+							error => update('',o.rule_id)
+						);
+					} catch(e) {
+						update('',o.rule_id)	
+					}
 
 				}
 			});
@@ -137,7 +141,8 @@ export default class MopinionDeployment extends React.Component {
 				width:'100%',
 				height:'100%',
 				zIndex:99999,
-				display: this.state.forms[o.rule_id].open ? 'flex' : 'none'
+				display: this.state.forms[o.rule_id].open ? 'flex' : 'none',
+				elevation:99999,
 			};
 			return (
 				<View style={wrapperStyle} key={i}>

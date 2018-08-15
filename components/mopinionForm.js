@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Dimensions, NativeModules, View, ScrollView, StyleSheet, Text, ActivityIndicator, Platform, Animated, Keyboard, LayoutAnimation, WebView } from 'react-native';
 //import * as Expo from 'expo';
-
 import {feedback} from '../api/feedback';
 import {logger} from '../api/logger';
 
@@ -10,6 +9,8 @@ import Modal from './ModalBox';
 import Header from './Header';
 import FormPage from './FormPage';
 import { ThemeProvider } from '../core/ThemeProvider';
+
+let CLICKED_ELEMENT = '';
 
 export class Mopinion extends React.Component {
 
@@ -132,6 +133,37 @@ export class Mopinion extends React.Component {
 					error:'',
 					required:block.properties && block.properties.required,
 					page:page,
+					isVisible:!block.properties.hide_on_init,
+					normalizedLogic: json.blockRules.hasOwnProperty(block.id) ? json.blockRules[block.id].map((rule) => {
+
+						if (typeof rule === 'object') {
+							if (rule.condition.elements) {
+								rule.condition.testValue = rule.condition.elements.map((elementAsIndex, i) => {
+
+									if ( ['gcr','radio','checkbox','select','thumbs','category'].indexOf(block.typeName) > -1  || (block.typeName === 'rating' && block.properties.labelsAsValue) ) {
+										
+										let propPath = block.typeName === 'rating' && block.properties.type === 'emoji' ? block.properties.emoji : block.properties.elements;
+										for (var k in propPath) {
+											if (k == elementAsIndex) {
+												return String(propPath[k].value ? propPath[k].value : propPath[k].label);
+											}
+										}
+
+									} else {
+
+										return String(elementAsIndex);
+									}
+
+								});
+							} else if (rule.condition.trigger_element){
+								rule.condition.testValue = [rule.condition.trigger_element];
+							}
+
+							return rule
+						} else {
+							return {}
+						}
+					}) : [],
 				};
 
 				if (block.typeName === 'screenshot' && thisRef.props.screenshot != null && thisRef.props.screenshot != "") {
@@ -240,7 +272,7 @@ export class Mopinion extends React.Component {
 	}
 
 	//Function for validating form elements
-	validateElement(block,data) {
+	validateElement(block,parentBlock={}) {
 		const valid = (v,d,skipValue) => {
 			const checkPhone = (number) => {
 				return number.length > 9 && number.match(/^[\(\)\s\-\+\d]{10,17}$/)
@@ -250,6 +282,12 @@ export class Mopinion extends React.Component {
 				return email.match(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 );
 			};
+
+			if (!d.isVisible && !d.isSub) {
+				return {showError:false,error:''};
+			}
+
+			if (Object.keys(parentBlock).length && !parentBlock.isVisible) return {showError:false,error:''};
 
 			if (!String(v) && !skipValue) {
 				return {showError:true,error:this.state.errorMessages['required']};
@@ -274,16 +312,17 @@ export class Mopinion extends React.Component {
 		}
 	}
 
+
 	//Function for validating the entire form or page
-	validateForm(post,data=false) {
+	validateForm(post) {
 
 		const isInvalidForm = this.state.elements.map((block,i) => {
 
 			if (block.sub && Object.keys(block.sub).length) {
 				//Subelements need to be handled differently - basically do the same one layer deeper
 				let subInvalid = Object.keys(block.sub).map((k) => {
-					let validatedElement = this.validateElement(block.sub[k],data);
-					this.updateFormStateSubElements(validatedElement,data,i,false,k);
+					let validatedElement = this.validateElement(block.sub[k],block);
+					this.updateFormStateSubElements(validatedElement,{fromValidator:true},i,false,k);
 					return {isInvalid:validatedElement.showError,element:validatedElement};
 				});
 				//console.log(subInvalid);
@@ -292,8 +331,8 @@ export class Mopinion extends React.Component {
 				return {isInvalid:subInvalid.length > 0,element:block,elementIndex:i};
 
 			} else {
-				let validatedElement = this.validateElement(block,data);
-				this.updateFormStateElements(validatedElement,data,i);
+				let validatedElement = this.validateElement(block);
+				this.updateFormStateElements(validatedElement,{fromValidator:true},i);
 				return {isInvalid:validatedElement.showError,element:validatedElement,elementIndex:i};
 			}
 		}).filter((o) => {
@@ -310,7 +349,11 @@ export class Mopinion extends React.Component {
 		}
 
 		if (isInvalidForm.length) {
-			this.scrollTo(this.state.elements[isInvalidForm[0].elementIndex].layout.y);
+			try {
+				this.scrollTo(this.state.elements[isInvalidForm[0].elementIndex].layout.y);
+			} catch(e) {
+				console.log(e,this.state.elements[isInvalidForm[0].elementIndex]);
+			}
 		}
 
 		if (!this.state.validateOnChange) this.setState({validateOnChange:true});
@@ -319,7 +362,11 @@ export class Mopinion extends React.Component {
 	}
 
 	//Function for updating the form state of general elements
-	updateFormStateElements(obj,data,index,callback) {
+	updateFormStateElements(obj,data={},index,callback) {
+
+		if (!data.hasOwnProperty('isLogicUpdate') && !data.fromValidator) {
+			CLICKED_ELEMENT = this.state.elements[index].field;
+		}
 
 		if (data.isSub) {
 			//return sub validation if function is called on a subelement
@@ -329,7 +376,7 @@ export class Mopinion extends React.Component {
 		let updateObject = obj;
 		//If the value changes and we want to validate input on change prevalidate input 
 		//so we can set the object state one time
-		if (this.state.validateOnChange && obj.hasOwnProperty('value')) {
+		if (this.state.validateOnChange && obj.hasOwnProperty('value') && !data.hasOwnProperty('isLogicUpdate')) {
 			const preValidateBlock = Object.assign({},this.state.elements[index], obj);
 			updateObject = Object.assign(
 				{}, 
@@ -346,7 +393,8 @@ export class Mopinion extends React.Component {
 				)
 	       	} 
 		},() => {
-			if (callback) callback();;
+			if (callback) callback();
+			if (this.state.elements[index].normalizedLogic.length && !data.fromValidator) this.logic(this.state.elements[index]);
 		});
 	}
 
@@ -382,8 +430,95 @@ export class Mopinion extends React.Component {
 	       	} 
 		},() => {
 			if (callback) callback();
+			if (this.state.elements[index].normalizedLogic.length) this.logic(this.state.elements[index]);
+
 		});
 	}
+
+	logic(element) {
+
+		const operatorFn = {
+			//equals
+			'==='(x,y) {return x == y},
+			//does not equal
+			'!=='(x,y) {return x != y},
+			//contains
+			'*'(x,y) {return x.indexOf(y) > -1},
+			//does not contain
+			'!*'() {return x.indexOf(y) == -1}
+		};
+
+		let { elements, formConfig: {blocks}} = this.state;
+
+		const checkRule = (rule={}) => {
+			let { action, condition } = rule;
+
+			if (typeof action === 'object' && typeof condition === 'object' && Array.isArray(condition.testValue) ) {
+
+				//if (['input','keydown','keyup'].indexOf(rule.trigger) > -1 && event !== 'input') return;
+				//if (['blur','focus'].indexOf(rule.trigger) > -1 && event !== 'change') return;
+
+				let show = action.action == 'show';
+				let operator = operatorFn.hasOwnProperty(condition.operator) ? operatorFn[condition.operator] : () => {};
+				action.targets.forEach((target) => {
+					//let elementIndex = this.state.elements.findIndex(el => el.field == target);
+					let elementIndex = this.state.elements.findIndex( el => el.field == target);
+
+					if (elementIndex == -1) {
+						elementIndex = this.state.elements.findIndex( el => el.hasOwnProperty(target));
+
+						if (elementIndex == -1) return
+					}
+					// let findElement = elements.filter(el => el.field == target)[0];
+					// let elementIndex = findElement ? findElement.elementIndex : -1;
+
+					let fromBlock =  blocks[element.id];
+					let conditionsTrue = condition.testValue.filter(v => {
+						if (Array.isArray(element.value)) {
+
+							return element.value.filter(x => operator(x.value,v)).length > 0;
+
+						} else {
+							return operator( element.value, v)
+						}  
+					})
+					let showElement;
+					if (condition.concat !== '&&') { 
+						showElement = conditionsTrue.length ? show : !show;
+					} else {
+						showElement = conditionsTrue.length == condition.testValue.length ? show : !show;
+					}
+					let update = {
+						isVisible:showElement,
+						fromClickedElement:''
+					};
+
+					if (!showElement) {
+						if (this.state.elements[elementIndex].value) update.prevValue = this.state.elements[elementIndex].value;
+						update.value = '';	
+					} else if (showElement) {
+						if (this.state.elements[elementIndex].prevValue) {
+							update.value = this.state.elements[elementIndex].prevValue;
+							update.prevValue = '';
+						}
+					}
+
+					if (element.field === CLICKED_ELEMENT) { 
+						update.fromClickedElement = element.field;
+					}
+
+					if (!showElement && element.field !== CLICKED_ELEMENT && this.state.elements[elementIndex].fromClickedElement === CLICKED_ELEMENT) {
+						return
+					}
+
+					this.updateFormStateElements(update, {isLogicUpdate:true}, elementIndex)
+				});
+			}
+		};
+
+		element.normalizedLogic.forEach(rule => checkRule(rule));
+	}
+
 
 	//Function for posting feedback to api as formdata
 	postFeedback() {
@@ -429,9 +564,13 @@ export class Mopinion extends React.Component {
 
 				} else if (block.field.indexOf('checkbox') > -1) {
 
-					feedbackValue = feedbackObj.value.filter((o) => {
-						return o.field == block.field
-					}).length ? true : false;
+					try {
+						feedbackValue = feedbackObj.value.filter((o) => {
+							return o.field == block.field
+						}).length ? true : false;
+					} catch(e) {
+						feedbackValue = false;
+					}
 
 				} else {
 					feedbackValue = feedbackObj.value || '';
@@ -515,9 +654,13 @@ export class Mopinion extends React.Component {
 
 				} else if (block.field.indexOf('checkbox') > -1) {
 
-					feedbackValue = feedbackObj.value.filter((o) => {
-						return o.field == block.field
-					}).length ? true : false;
+					try {
+						feedbackValue = feedbackObj.value.filter((o) => {
+							return o.field == block.field
+						}).length ? true : false;
+					} catch(e) {
+						feedbackValue = false;
+					}
 
 				} else if (block.field.indexOf('screenshot') > -1) {
 					//only send screenie if value checkbox is toggled
@@ -534,7 +677,6 @@ export class Mopinion extends React.Component {
 			});
 			return feedback;
 		},[]);
-
 
 		// logger.log("data");
 		// logger.log(this.state.formConfig.sendOptions.data);
@@ -619,7 +761,7 @@ export class Mopinion extends React.Component {
   		return {
   			elements:Object.assign([...prevState.elements],{[index]: Object.assign({}, prevState.elements[index],obj) })
   		}
-  	})
+  	},(s) => {console.log(obj)})
   }
 
   getPage() {

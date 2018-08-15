@@ -41,7 +41,6 @@ export default class RadioCheckBlock extends React.Component {
         return selectedValues;
       },[]);
 
-      console.log(this.state);
       this.props.onFormGroupValueChange(data.typeName === 'radio' ? values.toString() : values, data);
     };
 

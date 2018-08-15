@@ -41,8 +41,7 @@ class FormGroup extends React.Component {
       return update;
 
     } else if ( 
-        (nextProps.formGroupState.showError !== this.props.formGroupState.showError) ||
-        (nextProps.formGroupState.error !== this.props.formGroupState.error)
+        !shallowEqual(nextProps.formGroupState,this.props.formGroupState)
     ) {
       return true;
     } else {
@@ -145,7 +144,7 @@ class FormGroup extends React.Component {
 
   render() {
 
-    const { data, theme } = this.props;
+    const { data, theme, formGroupState } = this.props;
 
     let textStyle = [
       styles.text,
@@ -155,7 +154,8 @@ class FormGroup extends React.Component {
 
     let groupStyle = [
       styles.group,
-      theme.groupsAsCards && data.typeName !== 'section_break'  ? styles.cards : null
+      theme.groupsAsCards && data.typeName !== 'section_break'  ? styles.cards : null,
+      formGroupState.isVisible ? {display:'flex'} : {display:'none'}
     ];
     return (
       <View 
@@ -173,6 +173,13 @@ class FormGroup extends React.Component {
     );
   }
 } 
+
+
+function shallowEqual(a, b) {
+  for (let key in a) if (a[key]!==b[key]) return false;
+  for (let key in b) if (!(key in a)) return false;
+  return true;
+}
 
 const styles = StyleSheet.create({
   group: {
