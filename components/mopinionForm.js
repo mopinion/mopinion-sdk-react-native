@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Dimensions, NativeModules, View, ScrollView, StyleSheet, Text, ActivityIndicator, Platform, Animated, Keyboard, LayoutAnimation, WebView } from 'react-native';
+import { Dimensions, NativeModules, View, ScrollView, StyleSheet, Text, ActivityIndicator, Platform, Animated, Keyboard, LayoutAnimation, WebView, BackHandler } from 'react-native';
 //import * as Expo from 'expo';
 import {feedback} from '../api/feedback';
 import {logger} from '../api/logger';
@@ -85,9 +85,19 @@ export class Mopinion extends React.Component {
 		this.setState({isReady: true});
 	}
 
+	handleBackHandler = () => {
+		if (this.state.modalVisible) {
+			this.toggleModal();
+			return true
+		}
+		return false
+	}
+
 	componentWillUnmount() {
 		this.keyboardWillShowSub.remove();
 		this.keyboardWillHideSub.remove();
+
+		BackHandler.removeEventListener('hardwareBackPress', this.handleBackHandler)
 	}
 
 	// componentWillReceiveProps(nextProps) {
@@ -100,6 +110,8 @@ export class Mopinion extends React.Component {
 
 	async componentDidMount() {
 		if (this.state.modalVisible && !this.state.configWasLoaded) this.fetchConfig();
+
+		BackHandler.addEventListener('hardwareBackPress', this.handleBackHandler);
 	}
 
  	//Fetch form data from API async and set state

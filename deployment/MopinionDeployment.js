@@ -110,7 +110,6 @@ export default class MopinionDeployment extends React.Component {
 		};
 		if (events.hasOwnProperty(ev)) {
 			events[ev].forEach(async (o) => {
-
 				if ( await testRuleConditions(o, ev) ) {
 					//update(r)
 					try {
@@ -124,7 +123,7 @@ export default class MopinionDeployment extends React.Component {
 							error => update('',o.rule_id)
 						);
 					} catch(e) {
-						update('',o.rule_id)	
+						update('',o.rule_id);
 					}
 
 				}
@@ -139,10 +138,10 @@ export default class MopinionDeployment extends React.Component {
 				top:0,	
 				left:0,
 				width:'100%',
-				height:'100%',
-				zIndex:99999,
+				height:this.state.forms[o.rule_id].open ? '100%' : 0,
+				zIndex:this.state.forms[o.rule_id].open ? 99999 : 0,
 				display: this.state.forms[o.rule_id].open ? 'flex' : 'none',
-				elevation:99999,
+				elevation:9999
 			};
 			return (
 				<View style={wrapperStyle} key={i}>
