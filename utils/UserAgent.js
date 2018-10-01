@@ -6,7 +6,7 @@ export const UserAgent = ({setUserAgent}) => {
 		<script>
 			setTimeout(function() {
 			  window.postMessage(navigator.userAgent);
-			});
+			},500);
 		</script>
 	`;
 	return (
