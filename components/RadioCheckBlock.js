@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Text, View, StyleSheet } from 'react-native';
 import Control from './Control';
 import ErrorMessage from './ErrorMessage';
+import { getKeys } from '../utils/getKeys';
 
 export default class RadioCheckBlock extends React.Component {
 
@@ -13,7 +14,7 @@ export default class RadioCheckBlock extends React.Component {
     const initValue = [].concat(this.props.formGroupState.value);
     const properties = this.props.data.properties;
 
-    Object.keys(properties.elements).map((key,i) => {
+    getKeys(properties.elements).map((key,i) => {
 
       const element = properties.elements[key];
 
@@ -28,7 +29,7 @@ export default class RadioCheckBlock extends React.Component {
   pressHandler(key,value,data) {
 
     const updateParentState = () => {
-      const values = Object.keys(this.state).reduce((selectedValues,key) => {
+      const values = getKeys(this.state).reduce((selectedValues,key) => {
         let o = this.state[key];
         if (o.selected && data.typeName === 'checkbox') {
           selectedValues.push({
@@ -53,7 +54,7 @@ export default class RadioCheckBlock extends React.Component {
       }
     },() => {
       if (data.typeName === 'radio' && this.state[key].selected) {
-        const hasSelected = Object.keys(this.state).filter((k) => {          
+        const hasSelected = getKeys(this.state).filter((k) => {          
           return this.state[k].selected && k !== key
         });
 
@@ -81,7 +82,7 @@ export default class RadioCheckBlock extends React.Component {
   }
 
   blocks() {
-    return Object.keys(this.state).map((key, i) => {
+    return getKeys(this.state).map((key, i) => {
       let obj = this.state[key];
       let controlProps = {
         checked:obj.selected,

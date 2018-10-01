@@ -8,6 +8,7 @@ import Branding from './Branding';
 import ThankYouPage from './ThankYouPage';
 
 import withTheme from '../core/withTheme';
+import { getKeys } from '../utils/getKeys';
 
 class FormPage extends React.Component {
 
@@ -27,7 +28,7 @@ class FormPage extends React.Component {
     super(props);
     this.state = {};
 
-    this.props.config.pageMap && Object.keys(this.props.config.pageMap).forEach((k,i) => {
+    this.props.config.pageMap && getKeys(this.props.config.pageMap).forEach((k,i) => {
       const animValue = Number(k) == this.props.currentPage ? 1
         : Number(k) > this.props.currentPage ? 0
         : 2;
@@ -80,9 +81,9 @@ class FormPage extends React.Component {
 
   getPages() {
 
-    const last = Object.keys(this.props.config.pageMap).slice(-1).pop();
+    const last = getKeys(this.props.config.pageMap).slice(-1).pop();
 
-    return Object.keys(this.props.config.pageMap).map((pageNum,i) => {
+    return getKeys(this.props.config.pageMap).map((pageNum,i) => {
 
       const comparePage = Number(pageNum);
       const { currentPage } = this.props;
@@ -148,7 +149,7 @@ class FormPage extends React.Component {
     const { breakBlocks } = this.props;
 
     const isFirst = Number(fromPage) === 1;
-    const isLast = Number(Object.keys(this.props.config.pageMap).slice(-1).pop()) === Number(fromPage);
+    const isLast = Number(getKeys(this.props.config.pageMap).slice(-1).pop()) === Number(fromPage);
 
     let nextLabel = breakBlocks.hasOwnProperty(fromPage) ? breakBlocks[fromPage].nextLabel : 'Next';
     let prevLabel = breakBlocks.hasOwnProperty(fromPage) ? breakBlocks[fromPage].prevLabel : 'Previous';

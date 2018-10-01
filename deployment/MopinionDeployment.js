@@ -141,7 +141,7 @@ export default class MopinionDeployment extends React.Component {
 				height:this.state.forms[o.rule_id].open ? '100%' : 0,
 				zIndex:this.state.forms[o.rule_id].open ? 99999 : 0,
 				display: this.state.forms[o.rule_id].open ? 'flex' : 'none',
-				elevation:this.state.forms[o.rule_id].open  ? 9999 : 0
+				elevation:this.state.forms[o.rule_id].open ? 9999 : 0
 			};
 			return (
 				<View style={wrapperStyle} key={i}>

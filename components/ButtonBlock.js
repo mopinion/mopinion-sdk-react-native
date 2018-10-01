@@ -5,7 +5,8 @@ import { Text, View, StyleSheet } from 'react-native';
 import Button from './Button';
 
 import ErrorMessage from './ErrorMessage';
-import withTheme from '../core/withTheme'
+import withTheme from '../core/withTheme';
+import { getKeys } from '../utils/getKeys';
 
 class ButtonBlock extends React.Component {
 
@@ -16,7 +17,7 @@ class ButtonBlock extends React.Component {
     const initValue = [].concat(this.props.formGroupState.value);
     const { properties } = this.props.data;
 
-    Object.keys(properties.elements).map((key,i) => {
+    getKeys(properties.elements).map((key,i) => {
 
       const element = properties.elements[key];
 
@@ -33,7 +34,7 @@ class ButtonBlock extends React.Component {
   pressHandler(key,value,data) {
 
     const updateParentState = () => {
-      const values = Object.keys(this.state).reduce((selectedValues,key) => {
+      const values = getKeys(this.state).reduce((selectedValues,key) => {
         let o = this.state[key];
         if (o.selected && data.typeName === 'checkbox') {
           selectedValues.push({
@@ -57,7 +58,7 @@ class ButtonBlock extends React.Component {
       }
     },() => {
       if (data.typeName !== 'checkbox' && this.state[key].selected) {
-        const hasSelected = Object.keys(this.state).filter((k) => {          
+        const hasSelected = getKeys(this.state).filter((k) => {          
           return this.state[k].selected && k !== key
         });
 
@@ -88,7 +89,7 @@ class ButtonBlock extends React.Component {
 
     const { data } = this.props;
 
-    return Object.keys(this.state).map((key, i) => {
+    return getKeys(this.state).map((key, i) => {
       let obj = this.state[key];
 
       let formattedIcon = '';

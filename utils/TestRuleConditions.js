@@ -1,5 +1,6 @@
 import React from 'react';
 import { Platform, AsyncStorage } from 'react-native';
+import { getKeys } from '../utils/getKeys';
 
 export async function testRuleConditions(rule,event) {
 	const conditions = {
@@ -74,8 +75,8 @@ export async function testRuleConditions(rule,event) {
 		} catch(e) {}
 		o = o || {};
 
-		let show = Object.keys(rule).every((k) => {
-			if (conditions.hasOwnProperty(k) && rule[k] && (Object.keys(rule[k]).length > 0 || !isNaN(parseInt(rule[k],10))) ) {
+		let show = getKeys(rule).every((k) => {
+			if (conditions.hasOwnProperty(k) && rule[k] && (getKeys(rule[k]).length > 0 || !isNaN(parseInt(rule[k],10))) ) {
 				console.log('Checking condition -- :',k,'value',rule[k]);
 				return conditions[k](rule[k],o);
 			} else {

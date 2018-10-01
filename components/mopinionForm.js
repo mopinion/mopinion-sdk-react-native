@@ -10,6 +10,8 @@ import Header from './Header';
 import FormPage from './FormPage';
 import { ThemeProvider } from '../core/ThemeProvider';
 
+import { getKeys } from '../utils/getKeys';
+
 let CLICKED_ELEMENT = '';
 
 export class Mopinion extends React.Component {
@@ -127,10 +129,8 @@ export class Mopinion extends React.Component {
 				'Content-Type': 'application/json',
 			}
 		})
-		.then(function(response) { 
-			// Convert to JSON
-			return response.json();
-		}).then(function(json){
+		.then(r => r.json())
+		.then(json => {
 
 			let page = 1;
 			let breakBlocks = {};
@@ -186,7 +186,7 @@ export class Mopinion extends React.Component {
 				if (block.typeName === 'contact') {
 
 					obj.sub = {};
-					Object.keys(block.properties.elements).forEach((k,i) => {
+					getKeys(block.properties.elements).forEach((k,i) => {
 
 						let blockObj = block.properties.elements[k];
 						if (blockObj.show) {
@@ -203,7 +203,7 @@ export class Mopinion extends React.Component {
 									isSub:true
 								};
 							} else {
-								Object.keys(blockObj.subelements).forEach( (k2,i2) => {
+								getKeys(blockObj.subelements).forEach( (k2,i2) => {
 									obj.sub[k2.replace('last','')] = {
 										field:block.typeName + '_' + block.id + '_' + k2.replace('last',''), /* Last is just name... */
 										data_field:blockObj.subelements[k2].data_field,
@@ -299,7 +299,7 @@ export class Mopinion extends React.Component {
 				return {showError:false,error:''};
 			}
 
-			if (Object.keys(parentBlock).length && !parentBlock.isVisible) return {showError:false,error:''};
+			if (getKeys(parentBlock).length && !parentBlock.isVisible) return {showError:false,error:''};
 
 			if (!String(v) && !skipValue) {
 				return {showError:true,error:this.state.errorMessages['required']};
@@ -330,9 +330,9 @@ export class Mopinion extends React.Component {
 
 		const isInvalidForm = this.state.elements.map((block,i) => {
 
-			if (block.sub && Object.keys(block.sub).length) {
+			if (block.sub && getKeys(block.sub).length) {
 				//Subelements need to be handled differently - basically do the same one layer deeper
-				let subInvalid = Object.keys(block.sub).map((k) => {
+				let subInvalid = getKeys(block.sub).map((k) => {
 					let validatedElement = this.validateElement(block.sub[k],block);
 					this.updateFormStateSubElements(validatedElement,{fromValidator:true},i,false,k);
 					return {isInvalid:validatedElement.showError,element:validatedElement};
@@ -537,7 +537,7 @@ export class Mopinion extends React.Component {
 
 		const objectToFormData = (formData, obj, previousKey) => {
 			if (obj instanceof Object) {
-				Object.keys(obj).forEach((key) => {
+				getKeys(obj).forEach((key) => {
 					const value = obj[key];
 					if (value instanceof Object && !Array.isArray(value)) {
 						return objectToFormData(formData, value, key);
@@ -569,7 +569,7 @@ export class Mopinion extends React.Component {
 			if (typeof feedbackObj === 'object') {
 				if (feedbackObj.sub && block.field.indexOf('contact') > -1) {
 
-					const currentSubKey = Object.keys(feedbackObj.sub).filter((subKey) => {
+					const currentSubKey = getKeys(feedbackObj.sub).filter((subKey) => {
 						return feedbackObj.sub[subKey].field == block.field
 					})[0];
 					feedbackValue = feedbackObj.sub[currentSubKey] ? feedbackObj.sub[currentSubKey].value : '';
@@ -659,7 +659,7 @@ export class Mopinion extends React.Component {
 			if (typeof feedbackObj === 'object') {
 				if (feedbackObj.sub && block.field.indexOf('contact') > -1) {
 
-					const currentSubKey = Object.keys(feedbackObj.sub).filter((subKey) => {
+					const currentSubKey = getKeys(feedbackObj.sub).filter((subKey) => {
 						return feedbackObj.sub[subKey].field == block.field
 					})[0];
 					feedbackValue = feedbackObj.sub[currentSubKey] ? feedbackObj.sub[currentSubKey].value : '';

@@ -4,7 +4,7 @@ import { Text, View, StyleSheet } from 'react-native';
 import { Dropdown } from 'react-native-material-dropdown';
 import ErrorMessage from './ErrorMessage';
 import withTheme from '../core/withTheme';
-
+import { getKeys } from '../utils/getKeys';
 
 class SelectBlock extends React.Component {
 
@@ -24,7 +24,7 @@ class SelectBlock extends React.Component {
 
   data() {
     const { elements } = this.props.data.properties;
-    return Object.keys(elements).map((key, i) => {
+    return getKeys(elements).map((key, i) => {
       let obj = elements[key];
       return {value:obj.label || obj}
     }); 

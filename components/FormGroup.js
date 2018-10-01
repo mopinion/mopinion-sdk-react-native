@@ -10,6 +10,7 @@ import ContactBlock from './ContactBlock'
 import ButtonBlock from './ButtonBlock';
 import ScreenshotBlock from './ScreenshotBlock';
 import withTheme from '../core/withTheme';
+import { getKeys } from '../utils/getKeys';
 
 class FormGroup extends React.Component {
 
@@ -30,7 +31,7 @@ class FormGroup extends React.Component {
 
       let update = false;
 
-      Object.keys(nextProps.formGroupState.sub).forEach((k) => {
+      getKeys(nextProps.formGroupState.sub).forEach((k) => {
         const nextSub = nextProps.formGroupState.sub[k];
         const thisSub = this.props.formGroupState[k];
         if (!thisSub || nextSub.showError !== thisSub.showError || nextSub.error !== thisSub.error) {

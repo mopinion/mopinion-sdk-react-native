@@ -6,6 +6,7 @@ import TextBlock from './TextBlock';
 import RadioCheckBlock from './RadioCheckBlock';
 import SelectBlock from './SelectBlock';
 import ErrorMessage from './ErrorMessage';
+import { getKeys } from '../utils/getKeys';
 
 export default class ContactBlock extends React.Component {
 
@@ -22,7 +23,7 @@ export default class ContactBlock extends React.Component {
 
     const { data, formGroupState } = this.props;
 
-    const showElements = Object.keys(data.properties.elements).filter((key) => {
+    const showElements = getKeys(data.properties.elements).filter((key) => {
       return data.properties.elements[key.replace('last')].show
     });
 
