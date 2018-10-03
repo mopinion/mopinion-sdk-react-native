@@ -747,7 +747,7 @@ export class Mopinion extends React.Component {
 	  		}
 	  	}, () => {
 	  		if (this.state.modalVisible && !this.state.configWasLoaded) this.fetchConfig();
-	  		if (!this.state.modalVisible) setTimeout(()=>{this.props.callParentWhenClosed()},this.props.modalAnimationDuration);
+	  		if (!this.state.modalVisible) setTimeout(()=>{this.props.callParentWhenClosed(this.state.formIsFullySubmmitted)},this.props.modalAnimationDuration);
 	  	});
 	  }
   }

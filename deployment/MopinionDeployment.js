@@ -76,7 +76,7 @@ export default class MopinionDeployment extends React.Component {
 								MopinionSDK.subscribe(ev, () => {this.eventHandler(ev)})
 							});
 
-							forms[obj.rule_id] = {open:false};
+							forms[obj.rule_id] = {open:false,instance:rnd()};
 					});
 					this.setState({
 						deployment:deployment,
@@ -88,13 +88,13 @@ export default class MopinionDeployment extends React.Component {
 		})	
 		.catch(e => console.log(e))
 	}
-	updateOpenState(rule_id,show,f) {
+	updateOpenState(rule_id,show,f, isFullySubmitted) {
 		this.setState((prevState) => {
 			return {
 				...prevState,
 				forms: {
 					...prevState.forms,
-					[rule_id]: {open:show}
+					[rule_id]: {open:show,instance: isFullySubmitted ? rnd() : prevState.forms[rule_id].instances}
 				}
 			}
 		},() => {
@@ -133,18 +133,21 @@ export default class MopinionDeployment extends React.Component {
 	getForms() {
 		const { deployment } = this.state;
 		return deployment.map((o,i) => {
+
+			let form = this.state.forms[o.rule_id];
+
 			let wrapperStyle = {
 				position:'absolute',
 				top:0,	
 				left:0,
 				width:'100%',
-				height:this.state.forms[o.rule_id].open ? '100%' : 0,
-				zIndex:this.state.forms[o.rule_id].open ? 99999 : 0,
-				display: this.state.forms[o.rule_id].open ? 'flex' : 'none',
-				elevation:this.state.forms[o.rule_id].open ? 9999 : 0
+				height:form.open ? '100%' : 0,
+				zIndex:form.open ? 99999 : 0,
+				display: form.open ? 'flex' : 'none',
+				elevation:form.open  ? 9999 : 0
 			};
 			return (
-				<View style={wrapperStyle} key={i}>
+				<View style={wrapperStyle} key={o.rule_id + form.instance}>
 					<Mopinion 
 						form={{
 							formKey:o.formKey,
@@ -155,7 +158,10 @@ export default class MopinionDeployment extends React.Component {
 						userAgent={this.state.userAgent}
 						screenshot={this.state.screenshot}
 						ref={o.rule_id}
-						callParentWhenClosed={()=> {this.updateOpenState(o.rule_id, false, () => {console.log(this.state)});}}						
+						callParentWhenClosed={ (isFullySubmitted) => {
+								this.updateOpenState(o.rule_id, false, () => {}, isFullySubmitted);
+							}
+						}						
 					/>
 					{!this.state.userAgent ? (this.getUserAgent()) : null}
 				</View>
@@ -172,4 +178,8 @@ export default class MopinionDeployment extends React.Component {
 	render() {
 		return this.getForms()
 	}
+}
+
+function rnd() {
+	return Math.random().toString(36)
 }
