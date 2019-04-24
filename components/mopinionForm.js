@@ -21,7 +21,8 @@ export class Mopinion extends React.Component {
 		domain:'app.mopinion.com',
 		formKey:'',
 		callParentWhenClosed:() => {},
-		modalAnimationDuration:400
+		modalAnimationDuration:400,
+		metaData: {}
 	};
 
 	constructor(props){
@@ -683,13 +684,21 @@ export class Mopinion extends React.Component {
 			}
 
 			feedback.push( {
-				label:block.field,
-				value:feedbackValue	,
+				label:block.label,
+				value:feedbackValue,
 				type:block.type !== 'screenshot' && block.type !== 'image'  ? block.type : 'mobile_image'
 			});
 			return feedback;
 		},[]);
 
+		const { metaData } = this.props;
+		getKeys(metaData).forEach(metaDataKey => {
+			data.push({
+				label:metaDataKey,
+				value:metaData[metaDataKey],
+				type:'category'
+			});
+		});
 		// logger.log("data");
 		// logger.log(this.state.formConfig.sendOptions.data);
 		// user agent
@@ -736,14 +745,14 @@ export class Mopinion extends React.Component {
 	// }
 
 	//Function for toggeling modal visibility
-	toggleModal() {
+	toggleModal(force) {
 		if (this.static) {
 			// native static form
 			this.props.mopinionEvent(null);
 		} else {
 	  	this.setState((prevState) => {
 	  		return {
-	  			modalVisible:!prevState.modalVisible
+	  			modalVisible:typeof(force) !== 'undefined' ? force : !prevState.modalVisible
 	  		}
 	  	}, () => {
 	  		if (this.state.modalVisible && !this.state.configWasLoaded) this.fetchConfig();

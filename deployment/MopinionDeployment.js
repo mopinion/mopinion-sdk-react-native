@@ -105,7 +105,7 @@ export default class MopinionDeployment extends React.Component {
 		const { events } = this.state;
 		const update = (uri,rule) => {
 			this.setState({screenshot:uri}, () => {
-				this.updateOpenState(rule, true,	() => { this.refs[rule].toggleModal() })
+				this.updateOpenState(rule, true,	() => { this.refs[rule].toggleModal(true) })
 			});
 		};
 		if (events.hasOwnProperty(ev)) {
@@ -161,7 +161,8 @@ export default class MopinionDeployment extends React.Component {
 						callParentWhenClosed={ (isFullySubmitted) => {
 								this.updateOpenState(o.rule_id, false, () => {}, isFullySubmitted);
 							}
-						}						
+						}
+						{...this.props}						
 					/>
 					{!this.state.userAgent ? (this.getUserAgent()) : null}
 				</View>

@@ -1,3 +1,10 @@
+# 0.2.7
+
+- [X] Add metaData prop
+- [X] Bug fix posting correct fields to api
+- [X] Enhancment to form opening
+- [X] Remove deprecated BackAndroid from code 
+
 # 0.2.5
 
 - [X] Add Changelog
