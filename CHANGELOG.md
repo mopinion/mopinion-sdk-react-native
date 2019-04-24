@@ -1,4 +1,4 @@
-# 0.2.7
+# 0.3.0
 
 - [X] Add metaData prop
 - [X] Bug fix posting correct fields to api
