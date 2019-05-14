@@ -156,7 +156,7 @@ const styles = StyleSheet.create({
       width:0
     },
     zIndex:11,
-    elevation:1
+    elevation:11
   },
   text: {
     fontSize:16,

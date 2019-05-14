@@ -1,3 +1,7 @@
+# 0.3.3
+
+- [X] Increase header elevation on Android
+
 # 0.3.2
 
 - [X] Use SafeAreaView to display content in safe area's only

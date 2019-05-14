@@ -1,7 +1,7 @@
 {
   "name": "mopinion-react-native-sdk",
   "description": "Collect in-app feedback with Mopinion for React Native. Built fully in React Native for optimal integration with your RN app.",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "devDependencies": {
     "babel-preset-react-native-stage-0": "^1.0.1",
     "react-devtools": "^3.2.1",
