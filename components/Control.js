@@ -34,12 +34,12 @@ class Control extends Component {
   }
 
   _focus(press) {
-    this.setState({focus:press}, () => {
+  //  this.setState({focus:press}, () => {
       Animated.timing(this.state.circle, {
         toValue:press ? 1 : 0,
         duration:175
       }).start()
-    });
+  //  });
   }
 
   _centerElement() {
@@ -55,11 +55,11 @@ class Control extends Component {
       borderRadius:size/2,
       width:size,
       height:size,
-      opacity:.2,
-      backgroundColor:this.state.inside.interpolate({
+      opacity:this.state.circle.interpolate({
         inputRange: [0 ,1],
-        outputRange: ['#000', innerColor]
+        outputRange: [0, .2]
       }),
+      backgroundColor:innerColor,
       transform:[
         {scale:this.state.circle.interpolate({
           inputRange: [0 ,1],
@@ -75,7 +75,10 @@ class Control extends Component {
         width: size / 2,
         height: size / 2,
         borderRadius: (size/2) / 2,
-        backgroundColor: innerColor,
+        backgroundColor: this.state.inside.interpolate({
+          inputRange: [0 ,1],
+          outputRange: ['transparent', innerColor]
+        }),
         transform:[{scale:this.state.inside.interpolate({
           inputRange: [0 ,1],
           outputRange: [0, 1]
@@ -102,6 +105,10 @@ class Control extends Component {
         position:'absolute',
         top:-borderWidth,
         left:-borderWidth,
+        opacity:this.state.inside.interpolate({
+          inputRange: [0 ,1],
+          outputRange: [0, 1]
+        }),
         transform:[{scale:this.state.inside.interpolate({
           inputRange: [0 ,1],
           outputRange: [0, 1]

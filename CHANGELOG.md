@@ -1,3 +1,9 @@
+# 0.3.2
+
+- [X] Use SafeAreaView to display content in safe area's only
+- [X] Fix checkbox and radio button issues in Android
+- [X] Enhanced keyboard handling
+
 # 0.3.0
 
 - [X] Add metaData prop

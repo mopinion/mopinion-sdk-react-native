@@ -1,5 +1,5 @@
 import React from 'react';
-import {Dimensions, Button, View, Text, StatusBar, StyleSheet, Image, TouchableHighlight, Platform, Keyboard, Animated} from 'react-native';
+import {SafeAreaView,Dimensions, Button, View, Text, StatusBar, StyleSheet, Image, TouchableHighlight, Platform, Keyboard, Animated} from 'react-native';
 import PropTypes from 'prop-types';
 import withTheme from '../core/withTheme'
 import { Ripple } from './Ripple';
@@ -99,19 +99,29 @@ class Header extends React.Component {
       headerTextColor
     ];
 
+    let safeViewStyle = [
+      styles.safeView,
+      {backgroundColor:this.props.theme.headerBgColor},
+      (Platform.OS === 'android' ? {
+        paddingTop:StatusBar.currentHeight
+      } : {}) 
+    ]
+
     return (
-      <Animated.View 
-        style={containerStyle}
-        onLayout={this.onLayout}
-      >
-        <View style={innerHeaderStyle}>
-          {this.leftElement()}
-          {this.props.title ? 
-            (<Text style={headerTextStyle}>{this.props.title}</Text>) 
-            : null
-          }
-        </View>
-      </Animated.View>
+      <SafeAreaView style={safeViewStyle}>
+        <Animated.View 
+          style={containerStyle}
+          onLayout={this.onLayout}
+        >
+          <View style={innerHeaderStyle}>
+            {this.leftElement()}
+            {this.props.title ? 
+              (<Text style={headerTextStyle}>{this.props.title}</Text>) 
+              : null
+            }
+          </View>
+        </Animated.View>
+      </SafeAreaView>
     );
   }
 }
@@ -125,17 +135,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent:'center',
     backgroundColor: '#03a9f4',
-    shadowColor:'#000',
-    shadowRadius:3,
-    shadowOpacity:.3,
-    shadowOffset: {
-      height:1,
-      width:0
-    },
-    paddingTop:20,
     paddingHorizontal:0,
     zIndex:10,
-    height:70,
     position:'relative'
   },  
   header: {
@@ -145,6 +146,17 @@ const styles = StyleSheet.create({
     backgroundColor: '#03a9f4',
     height:50,
     flex:1
+  },
+  safeView: {
+    shadowColor:'#000',
+    shadowRadius:3,
+    shadowOpacity:.3,
+    shadowOffset: {
+      height:1,
+      width:0
+    },
+    zIndex:11,
+    elevation:1
   },
   text: {
     fontSize:16,
