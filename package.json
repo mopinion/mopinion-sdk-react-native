@@ -9,7 +9,8 @@
   },
   "peerDependencies": {
     "react": "*",
-    "react-native": "*"
+    "react-native": "*",
+    "react-native-webview": "*"
   },
   "scripts": {
     "start": "react-native start",
