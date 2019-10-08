@@ -8,6 +8,7 @@
     "react-test-renderer": "16.0.0"
   },
   "peerDependencies": {
+    "@react-native-community/async-storage": "*",
     "react": "*",
     "react-native": "*",
     "react-native-webview": "*"
