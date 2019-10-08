@@ -1,5 +1,6 @@
 import React from 'react';
-import { Platform, AsyncStorage } from 'react-native';
+import { Platform } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage'
 import { getKeys } from '../utils/getKeys';
 
 export async function testRuleConditions(rule,event) {
@@ -28,11 +29,11 @@ export async function testRuleConditions(rule,event) {
 			const testTarget = (target) => {
 				let OS = Platform.OS === target.os;
 				let version = !target.version.length || target.version.length && target.version.indexOf( String(Platform.Version) ) > -1;
-				return OS && version;	
+				return OS && version;
 			};
 			return targetArr.filter((o) => {return testTarget(o)}).length;
 		},
-		date(date) {	
+		date(date) {
 			const formatString = (s) => {
 				//String needs to be formatted to yyyy-mm-dd from dd-mm-yyyy
 				let arr = s.split('/').reverse().join('-');
@@ -58,7 +59,7 @@ export async function testRuleConditions(rule,event) {
 		},
 		session(session, o) {
 			const inDays = (d) => {
-				return Math.ceil(d / (1000 * 3600 * 24)); 
+				return Math.ceil(d / (1000 * 3600 * 24));
 			};
 			let now = inDays(new Date().getTime());
 			let prev = typeof o === 'object' && o.date ? inDays( new Date(o.date).getTime() ) : 0;
