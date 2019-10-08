@@ -19,11 +19,6 @@
     "test": "node node_modules/jest/bin/jest.js --watch",
     "devtools": "react-devtools"
   },
-  "rnpm": {
-    "assets": [
-      "./assets/Fonts/"
-    ]
-  },
   "dependencies": {
     "react-native-material-dropdown": "^0.7.1",
     "react-native-material-textfield": "^0.12.0",
