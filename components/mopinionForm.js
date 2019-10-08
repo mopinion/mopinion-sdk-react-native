@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Dimensions, NativeModules, View, ScrollView, StyleSheet, Text, ActivityIndicator, Platform, Animated, Keyboard, LayoutAnimation, WebView, BackHandler } from 'react-native';
+import { SafeAreaView, Dimensions, NativeModules, View, ScrollView, StyleSheet, Text, ActivityIndicator, Platform, Animated, Keyboard, LayoutAnimation, WebView, BackHandler } from 'react-native';
 //import * as Expo from 'expo';
 import {feedback} from '../api/feedback';
 import {logger} from '../api/logger';
@@ -21,7 +21,8 @@ export class Mopinion extends React.Component {
 		domain:'app.mopinion.com',
 		formKey:'',
 		callParentWhenClosed:() => {},
-		modalAnimationDuration:400
+		modalAnimationDuration:400,
+		metaData: {}
 	};
 
 	constructor(props){
@@ -69,13 +70,12 @@ export class Mopinion extends React.Component {
 
 	componentWillMount() {
 
-		const thisRef = this;
-		this.keyboardWillShowSub = Keyboard.addListener('keyboardWillShow', (e) => {
-			this.keyboardWillShow(e,thisRef);
-		});
-		this.keyboardWillHideSub = Keyboard.addListener('keyboardWillHide', (e) => {
-			this.keyboardWillHide(e,thisRef);
-		});
+
+		const showEvent = Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow';
+		const hideEvent = Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide';
+
+		this.keyboardWillShowSub = Keyboard.addListener(showEvent, this.keyboardShown);
+		this.keyboardWillHideSub = Keyboard.addListener(hideEvent, this.keyboardHidden);
 
 		if (NativeModules.UIManager && NativeModules.UIManager.setLayoutAnimationEnabledExperimental) {
       		NativeModules.UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -265,16 +265,16 @@ export class Mopinion extends React.Component {
 		})
   }
 
-	keyboardWillShow(event,thisRef) {
-		Animated.timing(thisRef.state.keyboardHeight, {
-			duration: event.duration,
-			toValue: event.endCoordinates.height,
-		}).start();
+	keyboardShown = event => {
+		Animated.timing(this.state.keyboardHeight, {
+			duration: 175,
+			toValue: event.endCoordinates.height
+		}).start(() => this.scrollTo(this.scrollPosition + event.endCoordinates.height));
 	}
 
-	keyboardWillHide(event,thisRef) {
-		Animated.timing(thisRef.state.keyboardHeight, {
-			duration: event.duration,
+	keyboardHidden = event => {		
+		Animated.timing(this.state.keyboardHeight, {
+			duration: 175,
 			toValue: 0,
 		}).start();
 	}
@@ -683,13 +683,21 @@ export class Mopinion extends React.Component {
 			}
 
 			feedback.push( {
-				label:block.field,
-				value:feedbackValue	,
+				label:block.label,
+				value:feedbackValue,
 				type:block.type !== 'screenshot' && block.type !== 'image'  ? block.type : 'mobile_image'
 			});
 			return feedback;
 		},[]);
 
+		const { metaData } = this.props;
+		getKeys(metaData).forEach(metaDataKey => {
+			data.push({
+				label:metaDataKey,
+				value:metaData[metaDataKey],
+				type:'category'
+			});
+		});
 		// logger.log("data");
 		// logger.log(this.state.formConfig.sendOptions.data);
 		// user agent
@@ -736,14 +744,14 @@ export class Mopinion extends React.Component {
 	// }
 
 	//Function for toggeling modal visibility
-	toggleModal() {
+	toggleModal(force) {
 		if (this.static) {
 			// native static form
 			this.props.mopinionEvent(null);
 		} else {
 	  	this.setState((prevState) => {
 	  		return {
-	  			modalVisible:!prevState.modalVisible
+	  			modalVisible:typeof(force) !== 'undefined' ? force : !prevState.modalVisible
 	  		}
 	  	}, () => {
 	  		if (this.state.modalVisible && !this.state.configWasLoaded) this.fetchConfig();
@@ -763,8 +771,8 @@ export class Mopinion extends React.Component {
     }
   }
 
-  scrollTo(y=0) {
-  	this.refs._scrollView.scrollTo({x: 0, y: y, animated: true});
+  scrollTo = (y=0) => {
+  	this.refs._scrollView && this.refs._scrollView.scrollTo({x: 0, y: y, animated: true});
   }
 
   setElementProps(obj,index) {
@@ -836,6 +844,8 @@ export class Mopinion extends React.Component {
 
 		const { form } = this.props;
 
+		//console.log(this.refs._scrollView)
+
 		return (
 			<ThemeProvider
 				theme={String(this.state.formConfig.theme)}
@@ -863,24 +873,27 @@ export class Mopinion extends React.Component {
 					/>
 					<ScrollView 
 						style={styles.container}
-						automaticallyAdjustContentInsets={false}
+						automaticallyAdjustContentInsets={'automatic'}
 						contentContainerStyle={{flexGrow:1,justifyContent:'flex-start'}}
 						ref='_scrollView'
 						onScroll={this.handleScroll}
 						scrollEventThrottle={50}
 						scrollEnabled={!this.state.isSwiping}
+
 					>
-						<Animated.View
-							style={{
-								flex:1,
-								paddingBottom:this.state.keyboardHeight
-							}}
-						>
-							{
-								typeof form === 'object' && form.webview ? this.webForm()
-								: this.state.configWasLoaded ? this.getPage() : this.loading()
-							}
-						</Animated.View>
+						<SafeAreaView style={{flex:1}}>
+							<Animated.View
+								style={{
+									flex:1,
+									paddingBottom:this.state.keyboardHeight
+								}}
+							>
+								{
+									typeof form === 'object' && form.webview ? this.webForm()
+									: this.state.configWasLoaded ? this.getPage() : this.loading()
+								}
+							</Animated.View>
+						</SafeAreaView>
 					</ScrollView>
 				</Modal>
 			</ThemeProvider>

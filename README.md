@@ -37,6 +37,21 @@ Trigger forms by calling the event emitter.
 
 `MopinionSDK.event('_button')`
 
+### Passing meta data from your app into Mopinion forms
+
+You can send an object of data along with the feedback sent by your users using the `metaData` prop. This is useful for passing along various metadata that you want want to have linked to a users feedback.
+
+```
+<MopinionDeployment 
+	deploymentID={'YOUR_ID_HERE'} 
+	metaData={{
+		meta:'value',
+		meta2:'value2',
+		meta3:'value3'
+	}}
+/>
+```
+
 
 ## Support
 
