@@ -134,6 +134,10 @@ export default class MopinionDeployment extends React.Component {
 
 			let form = this.state.forms[o.rule_id];
 
+			if(!form.open){
+				return null;
+			}
+
 			let wrapperStyle = {
 				position:'absolute',
 				top:0,
