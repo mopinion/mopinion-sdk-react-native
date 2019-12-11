@@ -2,10 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {
 	Dimensions,
-	View, 
-	Platform,   
+	View,
 	AppState,
-	AsyncStorage,
 } from 'react-native';
 import { MopinionSDK } from './MopinionSDK';
 import { testRuleConditions } from '../utils/TestRuleConditions';
@@ -62,7 +60,7 @@ export default class MopinionDeployment extends React.Component {
 		.then((response) => response.json())
 		.then((response) => {
 			if (response.code == 200) {
-				let deployment = response.deployment; 
+				let deployment = response.deployment;
 				if (deployment && Array.isArray(deployment)) {
 					let events = {}, forms = {};
 					deployment.forEach( (obj) => {
@@ -85,7 +83,7 @@ export default class MopinionDeployment extends React.Component {
 					},() =>{console.log(this.state)});
 				}
 			}
-		})	
+		})
 		.catch(e => console.log(e))
 	}
 	updateOpenState(rule_id,show,f, isFullySubmitted) {
@@ -136,9 +134,13 @@ export default class MopinionDeployment extends React.Component {
 
 			let form = this.state.forms[o.rule_id];
 
+			if(!form.open){
+				return null;
+			}
+
 			let wrapperStyle = {
 				position:'absolute',
-				top:0,	
+				top:0,
 				left:0,
 				width:'100%',
 				height:form.open ? '100%' : 0,
@@ -148,12 +150,12 @@ export default class MopinionDeployment extends React.Component {
 			};
 			return (
 				<View style={wrapperStyle} key={o.rule_id + form.instance}>
-					<Mopinion 
+					<Mopinion
 						form={{
 							formKey:o.formKey,
 							domain:o.domain,
 							webview:o.webview
-						}} 
+						}}
 						screenSize={`${Dimensions.get('window').width}x${Dimensions.get('window').height}`}
 						userAgent={this.state.userAgent}
 						screenshot={this.state.screenshot}
@@ -162,7 +164,7 @@ export default class MopinionDeployment extends React.Component {
 								this.updateOpenState(o.rule_id, false, () => {}, isFullySubmitted);
 							}
 						}
-						{...this.props}						
+						{...this.props}
 					/>
 					{!this.state.userAgent ? (this.getUserAgent()) : null}
 				</View>
@@ -171,8 +173,8 @@ export default class MopinionDeployment extends React.Component {
 	}
 	getUserAgent() {
 		return (
-			<UserAgent 
-				setUserAgent={(ua) => { this.setState({userAgent:ua},() => {console.log(this.state)}) }}	
+			<UserAgent
+				setUserAgent={(ua) => { this.setState({userAgent:ua},() => {console.log(this.state)}) }}
 			/>
 		)
 	}

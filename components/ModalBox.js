@@ -129,9 +129,9 @@ var ModalBox = createReactClass({
   },
 
   componentWillReceiveProps: function(props) {
-     if(this.props.isOpen != props.isOpen){
-        this.handleOpenning(props);
-     }
+    if(this.props.isOpen != props.isOpen){
+      this.handleOpenning(props);
+    }
   },
 
   handleOpenning: function(props) {
@@ -315,7 +315,7 @@ var ModalBox = createReactClass({
     var closingState = false;
     var inSwipeArea  = false;
 
-    var onPanRelease = (evt, state) => {
+    var onPanRelease = (evt, state) => {
       if (!inSwipeArea) return;
       inSwipeArea = false;
       if (this.props.entry === 'top' ? -state.dy > this.props.swipeThreshold : state.dy > this.props.swipeThreshold)

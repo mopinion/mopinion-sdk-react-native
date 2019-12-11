@@ -1,11 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { SafeAreaView, Dimensions, NativeModules, View, ScrollView, StyleSheet, Text, ActivityIndicator, Platform, Animated, Keyboard, LayoutAnimation, WebView, BackHandler } from 'react-native';
+import { SafeAreaView, Dimensions, NativeModules, View, ScrollView, StyleSheet, Text, ActivityIndicator, Platform, Animated, Keyboard, LayoutAnimation, BackHandler } from 'react-native';
+import { Webview } from 'react-native-webview'
 //import * as Expo from 'expo';
 import {feedback} from '../api/feedback';
 import {logger} from '../api/logger';
 
-import Modal from './ModalBox'; 
+import Modal from './ModalBox';
 import Header from './Header';
 import FormPage from './FormPage';
 import { ThemeProvider } from '../core/ThemeProvider';
@@ -153,7 +154,7 @@ export class Mopinion extends React.Component {
 								rule.condition.testValue = rule.condition.elements.map((elementAsIndex, i) => {
 
 									if ( ['gcr','radio','checkbox','select','thumbs','category'].indexOf(block.typeName) > -1  || (block.typeName === 'rating' && block.properties.labelsAsValue) ) {
-										
+
 										let propPath = block.typeName === 'rating' && block.properties.type === 'emoji' ? block.properties.emoji : block.properties.elements;
 										for (var k in propPath) {
 											if (k == elementAsIndex) {
@@ -272,7 +273,7 @@ export class Mopinion extends React.Component {
 		}).start(() => this.scrollTo(this.scrollPosition + event.endCoordinates.height));
 	}
 
-	keyboardHidden = event => {		
+	keyboardHidden = event => {
 		Animated.timing(this.state.keyboardHeight, {
 			duration: 175,
 			toValue: 0,
@@ -303,7 +304,7 @@ export class Mopinion extends React.Component {
 
 			if (!String(v) && !skipValue) {
 				return {showError:true,error:this.state.errorMessages['required']};
-			} 
+			}
 
 			if (v && d.isEmail) {
 				return {showError:!checkEmail(v),error:this.state.errorMessages['invalid_email']};
@@ -315,7 +316,7 @@ export class Mopinion extends React.Component {
 		};
 
 		if (block.page !== this.state.currentPage || //skip if not on currently active page
-			(!block.required && !block.isEmail && !block.isPhone) ) { 
+			(!block.required && !block.isEmail && !block.isPhone) ) {
 			return Object.assign({},block,{showError:false});
 		} else if (!block.required && (block.isPhone || block.isEmail) ) {
 			return Object.assign({},block,valid(block.value,block,true));
@@ -357,7 +358,7 @@ export class Mopinion extends React.Component {
 			}, () => {
 				this.saveData();
 			})
-				
+
 		}
 
 		if (isInvalidForm.length) {
@@ -386,12 +387,12 @@ export class Mopinion extends React.Component {
 		}
 
 		let updateObject = obj;
-		//If the value changes and we want to validate input on change prevalidate input 
+		//If the value changes and we want to validate input on change prevalidate input
 		//so we can set the object state one time
 		if (this.state.validateOnChange && obj.hasOwnProperty('value') && !data.hasOwnProperty('isLogicUpdate')) {
 			const preValidateBlock = Object.assign({},this.state.elements[index], obj);
 			updateObject = Object.assign(
-				{}, 
+				{},
 				this.validateElement(preValidateBlock, data),
 				obj
 			);
@@ -400,10 +401,10 @@ export class Mopinion extends React.Component {
 		this.setState((prevState) => {
 			return {
 				elements: Object.assign(
-					[...prevState.elements], 
+					[...prevState.elements],
 					{ [index] : Object.assign({}, prevState.elements[index], updateObject) }
 				)
-	       	} 
+	       	}
 		},() => {
 			if (callback) callback();
 			if (this.state.elements[index].normalizedLogic.length && !data.fromValidator) this.logic(this.state.elements[index]);
@@ -417,21 +418,21 @@ export class Mopinion extends React.Component {
 		if (this.state.validateOnChange && obj.hasOwnProperty('value')) {
 			const preValidateBlock = Object.assign({},this.state.elements[index].sub[key], obj);
 			updateObject = Object.assign(
-				{}, 
+				{},
 				this.validateElement(preValidateBlock, data),
 				obj
 			);
 		} else {
-			updateObject = Object.assign({},this.state.elements[index].sub[key], obj);	
+			updateObject = Object.assign({},this.state.elements[index].sub[key], obj);
 		}
 
 		this.setState((prevState) => {
 			return {
 				elements: Object.assign(
-					[...prevState.elements], 
-					{ 
+					[...prevState.elements],
+					{
 						[index]: {
-							...prevState.elements[index], 
+							...prevState.elements[index],
 							sub: {
 								...prevState.elements[index].sub,
 								[key]:updateObject
@@ -439,7 +440,7 @@ export class Mopinion extends React.Component {
 						}
 					}
 				)
-	       	} 
+	       	}
 		},() => {
 			if (callback) callback();
 			if (this.state.elements[index].normalizedLogic.length) this.logic(this.state.elements[index]);
@@ -492,10 +493,10 @@ export class Mopinion extends React.Component {
 
 						} else {
 							return operator( element.value, v)
-						}  
+						}
 					})
 					let showElement;
-					if (condition.concat !== '&&') { 
+					if (condition.concat !== '&&') {
 						showElement = conditionsTrue.length ? show : !show;
 					} else {
 						showElement = conditionsTrue.length == condition.testValue.length ? show : !show;
@@ -507,7 +508,7 @@ export class Mopinion extends React.Component {
 
 					if (!showElement) {
 						if (this.state.elements[elementIndex].value) update.prevValue = this.state.elements[elementIndex].value;
-						update.value = '';	
+						update.value = '';
 					} else if (showElement) {
 						if (this.state.elements[elementIndex].prevValue) {
 							update.value = this.state.elements[elementIndex].prevValue;
@@ -515,7 +516,7 @@ export class Mopinion extends React.Component {
 						}
 					}
 
-					if (element.field === CLICKED_ELEMENT) { 
+					if (element.field === CLICKED_ELEMENT) {
 						update.fromClickedElement = element.field;
 					}
 
@@ -627,7 +628,7 @@ export class Mopinion extends React.Component {
 					setTimeout(() => {thisReference.setState({formIsFullySubmmitted:true})},300)
 				})
 			}
-			
+
 		}).catch(function(err) {
 			//console.log(err); //:(
 		});
@@ -854,10 +855,10 @@ export class Mopinion extends React.Component {
 			>
 				<Modal
 					ref={"mopinion"}
-					backdrop={true}	
+					backdrop={true}
 					style={styles.modal}
 					isOpen={this.state.modalVisible}
-					swipeToClose={false} 
+					swipeToClose={false}
 					swipeArea={30}
 					keyboardTopOffset={0}
 					coverScreen={this.state.modalStyle == 'fill'}
@@ -871,7 +872,7 @@ export class Mopinion extends React.Component {
 						onPressLeft={() => this.toggleModal()}
 						title={!this.state.formIsFullySubmmitted ? this.state.formConfig.properties.title : this.state.formConfig.text.lastPageTitle ? this.state.formConfig.text.lastPageTitle : this.state.formConfig.properties.title}
 					/>
-					<ScrollView 
+					<ScrollView
 						style={styles.container}
 						automaticallyAdjustContentInsets={'automatic'}
 						contentContainerStyle={{flexGrow:1,justifyContent:'flex-start'}}
