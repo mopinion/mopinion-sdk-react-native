@@ -103,7 +103,13 @@ export default class MopinionDeployment extends React.Component {
 		const { events } = this.state;
 		const update = (uri,rule) => {
 			this.setState({screenshot:uri}, () => {
-				this.updateOpenState(rule, true,	() => { this.refs[rule].toggleModal(true) })
+				this.updateOpenState(rule, true,	() => { 
+					this.refs[rule].toggleModal(true);
+
+					if (typeof this.props.onOpen === 'function') {
+						this.props.onOpen({formKey:rule.formKey})
+					}
+				})
 			});
 		};
 		if (events.hasOwnProperty(ev)) {
@@ -127,6 +133,15 @@ export default class MopinionDeployment extends React.Component {
 				}
 			});
 		}
+	}
+	handleFormLoaded(data) {
+		if (typeof this.props.onOpen === 'function') this.props.onFormLoaded(data);
+	}
+	handleClose(data) {
+		if (typeof this.props.onClose === 'function') this.props.onClose(data);
+	}
+	handleFeedbackSent(data) {
+		if (typeof this.props.onFeedbackSent === 'function') this.props.onFeedbackSent(data);
 	}
 	getForms() {
 		const { deployment } = this.state;
@@ -164,6 +179,9 @@ export default class MopinionDeployment extends React.Component {
 								this.updateOpenState(o.rule_id, false, () => {}, isFullySubmitted);
 							}
 						}
+						onFormLoaded={handleFormLoaded}
+						onClose={handleClose}
+						onFeedbackSent={handleFeedbackSent}
 						{...this.props}
 					/>
 					{!this.state.userAgent ? (this.getUserAgent()) : null}

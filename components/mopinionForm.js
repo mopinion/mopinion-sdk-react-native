@@ -23,7 +23,10 @@ export class Mopinion extends React.Component {
 		formKey:'',
 		callParentWhenClosed:() => {},
 		modalAnimationDuration:400,
-		metaData: {}
+		metaData: {},
+		onFormLoaded:() => {},
+		onClose:() => {},
+		onFeedbackSent:() => {}
 	};
 
 	constructor(props){
@@ -262,6 +265,12 @@ export class Mopinion extends React.Component {
 					configWasLoaded:true,
 					breakBlocks:breakBlocks
 				}
+			}, () => {
+
+				this.props.onFormLoaded({
+					formKey:this.state.formConfig.surveyKey,
+					formName:this.state.formConfig.properties.name
+				});
 			});
 		})
   }
@@ -727,6 +736,13 @@ export class Mopinion extends React.Component {
 		const thisRef = this;
 		feedback.saveFeedback(post, () => {
 			thisRef.setState({formStatus:'done-posting'}, () => {
+
+				this.props.onFeedbackSent({
+					formKey:this.state.formConfig.surveyKey,
+					formName:this.state.formConfig.properties.name,
+					feedback:data
+				});
+
 				setTimeout(() => {
 					thisRef.setState({formIsFullySubmmitted:true}, () => {
 						//if autoclose is set
@@ -756,7 +772,14 @@ export class Mopinion extends React.Component {
 	  		}
 	  	}, () => {
 	  		if (this.state.modalVisible && !this.state.configWasLoaded) this.fetchConfig();
-	  		if (!this.state.modalVisible) setTimeout(()=>{this.props.callParentWhenClosed(this.state.formIsFullySubmmitted)},this.props.modalAnimationDuration);
+	  		if (!this.state.modalVisible) {
+		  		this.props.onClose({
+						formKey:this.state.formConfig.surveyKey,
+						formName:this.state.formConfig.properties.name,
+						feedback:data
+					});
+	  			setTimeout(()=>{this.props.callParentWhenClosed(this.state.formIsFullySubmmitted)},this.props.modalAnimationDuration);
+	  		}
 	  	});
 	  }
   }
