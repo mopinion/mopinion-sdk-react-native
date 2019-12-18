@@ -1,5 +1,11 @@
 module.exports = {
-  assets: [
-    "./assets/Fonts/"
-  ]
+	dependency: {
+		platforms: {
+      ios: {},
+      android: {},
+    },
+	  assets: [
+	    "./assets/Fonts/"
+	  ]
+	}
 }

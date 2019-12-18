@@ -8,17 +8,29 @@ Easily collect in-app feedback with the Mopinion SDK for React Native.
 ## Installation
 
 To install the Mopinion SDK into your React Native Application:
-1. In a terminal window, navigate to the root directory of your project and run :
+
+1. In a terminal window, navigate to the root directory of your project and run:
 
 ```
-npm install mopinion-react-native-sdk
+npm install mopinion-react-native-sdk react-native-view-shot @react-native-community/async-storage react-native-webview --save
 ```
 
-2. Link assets
+Note: since React Native 60 uses autolinking and the autolinking depth is only of the direct dependencies we now specifiy dependencies which require native modules as peerDependencies. This is a breaking change introduced in version 1.0.0. 
+
+2. Link assets by running the following command in your projects root directory:
+
+`react-native link mopinion-react-native-sdk`
+
+3. Install native modules by running pod install. Run the following command from your root directory.
+
+`cd ios && pod install && cd ..`
+
+If you're using React Native 59 and lower do the following as well.
 
 ```
-react-native link mopinion-react-native-sdk
 react-native link react-native-view-shot
+react-native link @react-native-community/async-storage
+react-native link react-native-webview
 ```
 
 ## Implementing the SDK
@@ -39,15 +51,57 @@ Trigger forms by calling the event emitter.
 
 ### Passing meta data from your app into Mopinion forms
 
-You can send an object of data along with the feedback sent by your users using the `metaData` prop. This is useful for passing along various metadata that you want want to have linked to a users feedback.
+You can send an object of data along with the feedback sent by your users using the `metaData` prop. This is useful for passing along various metadata that you might want to have linked to a users feedback.
 
 ```
 <MopinionDeployment 
+	//required
 	deploymentID={'YOUR_ID_HERE'} 
+	//optional
 	metaData={{
 		meta:'value',
 		meta2:'value2',
 		meta3:'value3'
+	}}
+	onOpen={(data) => {
+		//Fires the moment a form opens
+		//data
+		/*
+			{
+				formKey:'Formkey of the form that opened'
+			}
+		*/
+	}}
+	onFormLoaded={(data) => {
+		//Fires when a form opened and the form configuration was loaded
+		//data
+		/*
+			{
+				formKey:'Formkey of the form that opened',
+				formName:'Name of the form'
+			}
+		*/
+	}}
+	onClose={(data) => {
+		//Fires when a form closes after being open
+		//data
+		/*
+			{
+				formKey:'Formkey of the form that opened',
+				formName:'Name of the form'
+			}
+		*/
+	}}
+	onFeedbackSent={(data) => {
+		//Fires when the feedback on the final page is submitted
+		//data
+		/*
+			{
+				formKey:'Formkey of the form that opened',
+				formName:'Name of the form',
+				feedback: [] //An array of objects with feedback data 
+			}
+		*/
 	}}
 />
 ```

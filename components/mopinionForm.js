@@ -24,6 +24,7 @@ export class Mopinion extends React.Component {
 		callParentWhenClosed:() => {},
 		modalAnimationDuration:400,
 		metaData: {},
+		onOpen:() => {},
 		onFormLoaded:() => {},
 		onClose:() => {},
 		onFeedbackSent:() => {}
@@ -772,14 +773,24 @@ export class Mopinion extends React.Component {
 	  		}
 	  	}, () => {
 	  		if (this.state.modalVisible && !this.state.configWasLoaded) this.fetchConfig();
+
+	  		if (this.state.modalVisible) {
+		  		this.props.onOpen({
+						formKey:this.props.form.formKey,
+						...(this.state.formConfig.properties.name && {
+							formName:this.state.formConfig.properties.name
+						})
+					});
+		  	}
+
 	  		if (!this.state.modalVisible) {
 		  		this.props.onClose({
 						formKey:this.state.formConfig.surveyKey,
-						formName:this.state.formConfig.properties.name,
-						feedback:data
+						formName:this.state.formConfig.properties.name
 					});
 	  			setTimeout(()=>{this.props.callParentWhenClosed(this.state.formIsFullySubmmitted)},this.props.modalAnimationDuration);
 	  		}
+
 	  	});
 	  }
   }

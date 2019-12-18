@@ -105,10 +105,6 @@ export default class MopinionDeployment extends React.Component {
 			this.setState({screenshot:uri}, () => {
 				this.updateOpenState(rule, true,	() => { 
 					this.refs[rule].toggleModal(true);
-
-					if (typeof this.props.onOpen === 'function') {
-						this.props.onOpen({formKey:rule.formKey})
-					}
 				})
 			});
 		};
@@ -134,13 +130,16 @@ export default class MopinionDeployment extends React.Component {
 			});
 		}
 	}
-	handleFormLoaded(data) {
-		if (typeof this.props.onOpen === 'function') this.props.onFormLoaded(data);
+	handleOpen = (data) => {
+		if (typeof this.props.onOpen === 'function') this.props.onOpen(data);
 	}
-	handleClose(data) {
+	handleFormLoaded = (data) => {
+		if (typeof this.props.onFormLoaded === 'function') this.props.onFormLoaded(data);
+	}
+	handleClose = (data) => {
 		if (typeof this.props.onClose === 'function') this.props.onClose(data);
 	}
-	handleFeedbackSent(data) {
+	handleFeedbackSent = (data) => {
 		if (typeof this.props.onFeedbackSent === 'function') this.props.onFeedbackSent(data);
 	}
 	getForms() {
@@ -179,9 +178,10 @@ export default class MopinionDeployment extends React.Component {
 								this.updateOpenState(o.rule_id, false, () => {}, isFullySubmitted);
 							}
 						}
-						onFormLoaded={handleFormLoaded}
-						onClose={handleClose}
-						onFeedbackSent={handleFeedbackSent}
+						onOpen={this.handleOpen}
+						onFormLoaded={this.handleFormLoaded}
+						onClose={this.handleClose}
+						onFeedbackSent={this.handleFeedbackSent}
 						{...this.props}
 					/>
 					{!this.state.userAgent ? (this.getUserAgent()) : null}

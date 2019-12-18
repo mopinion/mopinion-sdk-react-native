@@ -1,17 +1,18 @@
 {
   "name": "mopinion-react-native-sdk",
   "description": "Collect in-app feedback with Mopinion for React Native. Built fully in React Native for optimal integration with your RN app.",
-  "version": "0.3.3",
+  "version": "1.0.0-rc7",
   "devDependencies": {
     "babel-preset-react-native-stage-0": "^1.0.1",
     "react-devtools": "^3.2.1",
     "react-test-renderer": "16.0.0"
   },
   "peerDependencies": {
-    "@react-native-community/async-storage": "*",
     "react": "*",
     "react-native": "*",
-    "react-native-webview": "*"
+    "react-native-view-shot": "^3.0.2",
+    "react-native-webview": "*",
+    "@react-native-community/async-storage": "*"
   },
   "scripts": {
     "start": "react-native start",
@@ -22,16 +23,15 @@
   },
   "dependencies": {
     "react-native-material-dropdown": "^0.7.1",
-    "react-native-material-textfield": "^0.12.0",
-    "react-native-view-shot": "^3.0.2"
+    "react-native-material-textfield": "^0.12.0"
   },
   "main": "index.js",
   "author": "Mopinion",
   "license": "MIT",
   "homepage": "https://github.com/mopinion/mopinion-sdk-react-native#readme",
   "repository": {
-    "type" : "git",
-    "url" : "https://github.com/mopinion/mopinion-sdk-react-native.git"
+    "type": "git",
+    "url": "https://github.com/mopinion/mopinion-sdk-react-native.git"
   },
   "keywords": [
     "mopinion",

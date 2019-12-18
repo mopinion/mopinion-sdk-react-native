@@ -1,3 +1,9 @@
+# 1.0.0
+
+- Breaking change: fixed deprecated imports of AsyncStorage and WebView 
+- Breaking change: moved rnpm linking of assets to react-native.config.js
+- Added onOpen, onFormLoaded, onFeedbackSent and onClose props
+
 # 0.3.3
 
 - [X] Increase header elevation on Android
