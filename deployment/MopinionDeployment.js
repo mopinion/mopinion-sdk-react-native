@@ -52,6 +52,7 @@ export default class MopinionDeployment extends React.Component {
 		}
 	}
 	async fetchDeployment() {
+		const { onDeploymentLoaded=()=>{} } = this.props;
 		let deploymentURL = `https://mjolnir.mopinion.com/pastease/mobile/compact/${this.props.deploymentID}`;
 		fetch(deploymentURL, {
 			method: 'GET',
@@ -80,7 +81,9 @@ export default class MopinionDeployment extends React.Component {
 						deployment:deployment,
 						events:events,
 						forms:forms
-					},() =>{console.log(this.state)});
+					},() => {
+						onDeploymentLoaded(this.state);
+					});
 				}
 			}
 		})

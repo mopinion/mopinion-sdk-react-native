@@ -1,3 +1,8 @@
+# 1.1.0
+
+- Add onDeploymentLoaded prop
+
+
 # 1.0.1
 
 - Fixed webview named import
