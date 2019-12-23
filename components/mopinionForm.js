@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { SafeAreaView, Dimensions, NativeModules, View, ScrollView, StyleSheet, Text, ActivityIndicator, Platform, Animated, Keyboard, LayoutAnimation, BackHandler } from 'react-native';
-import { Webview } from 'react-native-webview'
+import { WebView } from 'react-native-webview'
 //import * as Expo from 'expo';
 import {feedback} from '../api/feedback';
 import {logger} from '../api/logger';
@@ -649,7 +649,7 @@ export class Mopinion extends React.Component {
 	}
 
 	webForm() {
-		let uri = `https://${this.state.form.domain}/survey/public/modal?key=${this.state.form.formKey}&domain=${this.state.form.domain}&version=1.3`;
+		let uri = `https://${this.state.form.domain}/survey/public/webview?key=${this.state.form.formKey}&domain=${this.state.form.domain}`;
 		logger.log(uri);
 		return (
 			<WebView

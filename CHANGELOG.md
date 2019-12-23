@@ -1,3 +1,8 @@
+# 1.0.1
+
+- Fixed webview named import
+- Update webview path
+
 # 1.0.0
 
 - Breaking change: fixed deprecated imports of AsyncStorage and WebView 
