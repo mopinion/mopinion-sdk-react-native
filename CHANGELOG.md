@@ -1,3 +1,7 @@
+# 1.2.0
+
+- Add metaData to webview type forms
+
 # 1.1.0
 
 - Add onDeploymentLoaded prop

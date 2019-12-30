@@ -649,12 +649,20 @@ export class Mopinion extends React.Component {
 	}
 
 	webForm() {
-		let uri = `https://${this.state.form.domain}/survey/public/webview?key=${this.state.form.formKey}&domain=${this.state.form.domain}`;
+		const uri = `https://${this.state.form.domain}/survey/public/webview?key=${this.state.form.formKey}&domain=${this.state.form.domain}`;
+		const { metaData={} } = this.props;
+
 		logger.log(uri);
+
+		const injectMetaData = `(function() {
+			window.metaData = ${JSON.stringify(metaData)};
+		})();`;
+
 		return (
 			<WebView
 				source={{uri: uri}}
 				scalesPageToFit={false}
+				injectedJavaScript={injectMetaData}
 			/>
 		);
 	}
