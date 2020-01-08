@@ -23,7 +23,8 @@ export default class MopinionDeployment extends React.Component {
 			forms:[],
 			appState:AppState.currentState,
 			userAgent:'',
-			screenshot:''
+			screenshot:'',
+			wrapperHeight:Dimensions.get('window').height
 		};
 		this.eventHandler = this.eventHandler.bind(this);
 		this._handleAppStateChange = this._handleAppStateChange.bind(this);
@@ -160,13 +161,17 @@ export default class MopinionDeployment extends React.Component {
 				top:0,
 				left:0,
 				width:'100%',
-				height:form.open ? '100%' : 0,
+				height:form.open ? this.state.wrapperHeight : 0,
 				zIndex:form.open ? 99999 : 0,
 				display: form.open ? 'flex' : 'none',
 				elevation:form.open  ? 9999 : 0
 			};
 			return (
-				<View style={wrapperStyle} key={o.rule_id + form.instance}>
+				<View 
+					style={wrapperStyle} 
+					key={o.rule_id + form.instance}
+					onLayout={() => this.setState({wrapperHeight:Dimensions.get('window').height})}
+				>
 					<Mopinion
 						form={{
 							formKey:o.formKey,

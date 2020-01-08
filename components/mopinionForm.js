@@ -83,12 +83,9 @@ export class Mopinion extends React.Component {
 		this.keyboardWillHideSub = Keyboard.addListener(hideEvent, this.keyboardHidden);
 
 		if (NativeModules.UIManager && NativeModules.UIManager.setLayoutAnimationEnabledExperimental) {
-      		NativeModules.UIManager.setLayoutAnimationEnabledExperimental(true);
-    	}
+      NativeModules.UIManager.setLayoutAnimationEnabledExperimental(true);
+    }
 
-		// Expo.Font.loadAsync({
-		// 	'FontAwesome': require('../assets/Fonts/FontAwesome.ttf')
-		// });
 		this.setState({isReady: true});
 	}
 
@@ -101,8 +98,10 @@ export class Mopinion extends React.Component {
 	}
 
 	componentWillUnmount() {
+
 		this.keyboardWillShowSub.remove();
 		this.keyboardWillHideSub.remove();
+
 
 		BackHandler.removeEventListener('hardwareBackPress', this.handleBackHandler)
 	}
@@ -916,8 +915,13 @@ export class Mopinion extends React.Component {
 					/>
 					<ScrollView
 						style={styles.container}
-						automaticallyAdjustContentInsets={'automatic'}
-						contentContainerStyle={{flexGrow:1,justifyContent:'flex-start'}}
+						automaticallyAdjustContentInsets
+						contentInsetAdjustmentBehavior="automatic"
+						contentContainerStyle={{
+							flexGrow:1, 
+							justifyContent:'flex-start', 
+							...(Platform.OS === 'android' && {paddingBottom:24})
+						}}
 						ref='_scrollView'
 						onScroll={this.handleScroll}
 						scrollEventThrottle={50}

@@ -1,3 +1,7 @@
+# 1.2.1
+
+- Fix modal offset issue on Android after closing keyboard
+
 # 1.2.0
 
 - Add metaData to webview type forms
