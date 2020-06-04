@@ -24,11 +24,11 @@ export default class ScreenshotBlock extends React.Component {
     };
   }
 
-  async componentWillMount() {
+  async UNSAFE_componentWillMount() {
     this.getSetImageSize()
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.formGroupState.screenshot && !this.state.sizeSet) {
       this.getSetImageSize();
     }

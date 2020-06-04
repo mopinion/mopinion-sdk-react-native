@@ -1,3 +1,7 @@
+# 1.2.2
+- Rename deprecated component lifecycle methods
+- Make onFeedbackSent prop work with webview forms
+
 # 1.2.1
 
 - Fix modal offset issue on Android after closing keyboard

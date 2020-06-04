@@ -53,7 +53,7 @@ class FormPage extends React.Component {
     this.props.updateFormState(value,data,index);
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.formIsFullySubmmitted){
       this.forceUpdate();
     } else {

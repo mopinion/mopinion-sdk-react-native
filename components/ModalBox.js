@@ -112,7 +112,7 @@ var ModalBox = createReactClass({
     return true
   },
 
-  componentWillMount: function() {
+  UNSAFE_componentWillMount: function() {
     this.createPanResponder();
     this.handleOpenning(this.props);
     // Needed for IOS because the keyboard covers the screen
@@ -128,7 +128,7 @@ var ModalBox = createReactClass({
     if (this.subscriptions) this.subscriptions.forEach((sub) => sub.remove());
   },
 
-  componentWillReceiveProps: function(props) {
+  UNSAFE_componentWillReceiveProps: function(props) {
     if(this.props.isOpen != props.isOpen){
       this.handleOpenning(props);
     }

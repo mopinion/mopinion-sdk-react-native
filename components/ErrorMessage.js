@@ -16,7 +16,7 @@ class ErrorMessage extends React.Component {
     };
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     this._animate(nextProps.show);
   }
 

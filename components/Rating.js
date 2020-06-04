@@ -75,7 +75,7 @@ class Rating extends Component {
     this.labelRefs = [];
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this._panResponder = PanResponder.create({
       // Ask to be the responder:
       onStartShouldSetPanResponder: (evt, gestureState) => true,

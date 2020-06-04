@@ -60,7 +60,7 @@ class Button extends Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (this.props.isToggle) {
       this._animateToggle(nextProps.selected);
     }

@@ -73,7 +73,7 @@ export class Mopinion extends React.Component {
 		this.handleScroll = this.handleScroll.bind(this);
 	}
 
-	componentWillMount() {
+	UNSAFE_componentWillMount() {
 
 
 		const showEvent = Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow';
@@ -643,7 +643,7 @@ export class Mopinion extends React.Component {
 		});
 	}
 
-  	mopinionEvent(id) {
+  mopinionEvent(id) {
 		this.props.mopinionEvent(id);
 	}
 
@@ -653,8 +653,30 @@ export class Mopinion extends React.Component {
 
 		logger.log(uri);
 
+		const handleFeedbackSent = data => {
+
+			let parsed = {};
+			try {
+				parsed = JSON.parse(data);
+			} catch(e) {}
+
+			this.props.onFeedbackSent({
+				formKey:this.state.formConfig.surveyKey,
+				formName:this.state.formConfig.properties.name,
+				feedback:parsed.feedback
+			});
+		}
+
 		const injectMetaData = `(function() {
 			window.metaData = ${JSON.stringify(metaData)};
+			try {
+				document.addEventListener('mopinion_feedback_sent', function(e) {
+					window.ReactNativeWebView.postMessage(JSON.stringify(e.detail));
+				});
+			} catch(e) {
+			}
+
+			return true;
 		})();`;
 
 		return (
@@ -662,6 +684,7 @@ export class Mopinion extends React.Component {
 				source={{uri: uri}}
 				scalesPageToFit={false}
 				injectedJavaScript={injectMetaData}
+				onMessage={e => handleFeedbackSent(e.nativeEvent.data)}
 			/>
 		);
 	}

@@ -26,7 +26,7 @@ class Control extends Component {
     };
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     Animated.timing(this.state.inside, {
       toValue:nextProps.checked ? 1 : 0,
       duration:125
