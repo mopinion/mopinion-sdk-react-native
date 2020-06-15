@@ -1,3 +1,6 @@
+# 1.2.3
+- Fix UserAgent fetching using a WebView
+
 # 1.2.2
 - Rename deprecated component lifecycle methods
 - Make onFeedbackSent prop work with webview forms
