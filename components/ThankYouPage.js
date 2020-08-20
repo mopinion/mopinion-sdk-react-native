@@ -35,6 +35,8 @@ class ThankYouPage extends React.Component {
       flexDirection: 'column',
       justifyContent: 'center',
       alignItems: 'center',
+      marginLeft:10,
+      marginRight:10
     };
 
     let checkStyle = {
