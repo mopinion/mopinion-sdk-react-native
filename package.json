@@ -22,7 +22,7 @@
     "devtools": "react-devtools"
   },
   "dependencies": {
-    "react-native-material-dropdown": "git://github.com/welstarco/react-native-material-dropdown.git",
+    "react-native-material-dropdown": "git://github.com/welstarco/react-native-material-dropdown.git#dependency_change",
     "@ubaids/react-native-material-textfield": "^0.16.3"
   },
   "main": "index.js",
