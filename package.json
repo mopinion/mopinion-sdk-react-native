@@ -22,8 +22,9 @@
     "devtools": "react-devtools"
   },
   "dependencies": {
-    "react-native-material-dropdown": "git://github.com/welstarco/react-native-material-dropdown.git#dependency_change",
-    "@ubaids/react-native-material-textfield": "^0.16.3"
+    "@mopinion-mobile/react-native-material-dropdown": "^1.0.0",
+    "@ubaids/react-native-material-textfield": "^0.16.3",
+    "create-react-class": "^15.6.3"
   },
   "main": "index.js",
   "author": "Mopinion",
