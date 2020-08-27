@@ -84,7 +84,8 @@ class Button extends Component {
     Animated.timing(this.state.colors, {
       toValue:selected ? 1 : 0,
       duration:225,
-      easing:Easing.bezier(0.4, 0.0, 0.2, 1)
+      easing:Easing.bezier(0.4, 0.0, 0.2, 1),
+      useNativeDriver: false
     }).start()
   }
 

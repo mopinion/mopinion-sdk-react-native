@@ -546,12 +546,14 @@ class Rating extends Component {
 
       Animated.spring(o.value, {
         toValue:to ? 1 : 0,
-        duration:225
+        duration:225,
+        useNativeDriver: false
       }).start(callback);
 
       Animated.spring(o.labelValue, {
         toValue:toLabel ? 1 : 0,
-        duration:225
+        duration:225,
+        useNativeDriver: false
       }).start();
     });
   }

@@ -62,13 +62,15 @@ class FormPage extends React.Component {
       Animated.timing(this.state[this.props.currentPage], {
         toValue:isNext ? 2 : 0,
         duration:375,
-        easing:Easing.bezier(0.4, 0.0, 0.2, 1)
+        easing:Easing.bezier(0.4, 0.0, 0.2, 1),
+        useNativeDriver: false
       }).start();
 
       Animated.timing(this.state[nextProps.currentPage], {
         toValue:1,
         duration:425,
-        easing:Easing.bezier(0.4, 0.0, 0.2, 1)
+        easing:Easing.bezier(0.4, 0.0, 0.2, 1),
+        useNativeDriver: false
       }).start();
     }
   }

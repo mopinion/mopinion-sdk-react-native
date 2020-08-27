@@ -18,11 +18,13 @@ class ThankYouPage extends React.Component {
     Animated.timing(this.state.check, {
       toValue: 1,
       duration: 425,
-      easing: Easing.bezier(0.4, 0.0, 0.2, 1)
+      easing: Easing.bezier(0.4, 0.0, 0.2, 1),
+      useNativeDriver: false
     }).start(Animated.timing(this.state.text, {
       toValue: 1,
       duration: 525,
-      easing: Easing.bezier(0.4, 0.0, 0.2, 1)
+      easing: Easing.bezier(0.4, 0.0, 0.2, 1),
+      useNativeDriver: false
     }).start());
   }
 

@@ -52,7 +52,8 @@ class ErrorMessage extends React.Component {
   _animate(show) {
     Animated.spring(this.state.animation,{
       toValue: show ? 1 : 0,                   
-      duration: 225,              
+      duration: 225, 
+      useNativeDriver: false             
     }).start();
   }
 

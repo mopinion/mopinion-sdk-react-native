@@ -29,7 +29,8 @@ class Control extends Component {
   UNSAFE_componentWillReceiveProps(nextProps) {
     Animated.timing(this.state.inside, {
       toValue:nextProps.checked ? 1 : 0,
-      duration:125
+      duration:125,
+      useNativeDriver: false
     }).start() 
   }
 
@@ -37,7 +38,8 @@ class Control extends Component {
   //  this.setState({focus:press}, () => {
       Animated.timing(this.state.circle, {
         toValue:press ? 1 : 0,
-        duration:175
+        duration:175,
+        useNativeDriver: false
       }).start()
   //  });
   }
