@@ -118,7 +118,7 @@ export default class ScreenshotBlock extends React.Component {
           shadowRadius:5,    
         },
         android: {
-          elevation: 4,
+          elevation: 3,
           backgroundColor: 'white'
         },
       }),
