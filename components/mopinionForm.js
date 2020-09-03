@@ -278,7 +278,8 @@ export class Mopinion extends React.Component {
 	keyboardShown = event => {
 		Animated.timing(this.state.keyboardHeight, {
 			duration: 175,
-			toValue: event.endCoordinates.height
+			toValue: event.endCoordinates.height,
+			useNativeDriver: false
 		}).start(() => this.scrollTo(this.scrollPosition + event.endCoordinates.height));
 	}
 
@@ -286,6 +287,7 @@ export class Mopinion extends React.Component {
 		Animated.timing(this.state.keyboardHeight, {
 			duration: 175,
 			toValue: 0,
+			useNativeDriver: false
 		}).start();
 	}
 

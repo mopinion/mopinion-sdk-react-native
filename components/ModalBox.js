@@ -178,7 +178,8 @@ var ModalBox = createReactClass({
       this.state.backdropOpacity,
       {
         toValue: 1,
-        duration: this.props.animationDuration
+        duration: this.props.animationDuration,
+        useNativeDriver: false
       }
     );
     this.state.animBackdrop.start(() => {
@@ -200,7 +201,8 @@ var ModalBox = createReactClass({
       this.state.backdropOpacity,
       {
         toValue: 0,
-        duration: this.props.animationDuration
+        duration: this.props.animationDuration,
+        useNativeDriver: false
       }
     );
     this.state.animBackdrop.start(() => {
@@ -242,6 +244,7 @@ var ModalBox = createReactClass({
           toValue: this.state.positionDest,
           duration: this.props.animationDuration,
           easing: this.props.easing,
+          useNativeDriver: false
         }
       );
       this.state.animOpen.start(() => {
@@ -278,7 +281,8 @@ var ModalBox = createReactClass({
       this.state.position,
       {
         toValue: this.props.entry === 'top' ? -this.state.containerHeight : this.state.containerHeight,
-        duration: this.props.animationDuration
+        duration: this.props.animationDuration,
+        useNativeDriver: false
       }
     );
     this.state.animClose.start(() => {
@@ -324,7 +328,10 @@ var ModalBox = createReactClass({
         this.animateOpen();
     };
 
-    var animEvt = Animated.event([null, {customY: this.state.position}]);
+    var animEvt = Animated.event(
+      [null, {customY: this.state.position}], 
+      {useNativeDriver: false}
+    );
 
     var onPanMove = (evt, state) => {
       var newClosingState = this.props.entry === 'top' ? -state.dy > this.props.swipeThreshold : state.dy > this.props.swipeThreshold;

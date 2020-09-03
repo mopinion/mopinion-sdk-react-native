@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Text, View, StyleSheet } from 'react-native';
-import { Dropdown } from 'react-native-material-dropdown';
+import { Dropdown } from '@mopinion-mobile/react-native-material-dropdown';
 import ErrorMessage from './ErrorMessage';
 import withTheme from '../core/withTheme';
 import { getKeys } from '../utils/getKeys';

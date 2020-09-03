@@ -103,18 +103,48 @@ class Rating extends Component {
     });
   }
 
+  /* Calculate height of all labels and store in this.state.labelHeight[] in one call. 
+     Ratings that start hidden will have no labelRefs.
+     The labelRefs are only set during their render by the _label() function when made visible.
+     This function is optimised for use in componentDidMount. */
+  setLabelHeightsInitially() {
+    var tmp_labelHeights = [];
+    // the labelRefs are only set during their render by the _label() function
+    var numberOfLabels=this.labelRefs.length;
+    
+    // for some rating types this property will be === 'undefined' which is ok as they have no labels anyway :)
+    if(this.props.data.properties.showCaptions) {
+      if(this.state.labelHeight.length < this.labelRefs.length) {
+        this.labelRefs.forEach( (ref,i) => {
+          if(i>=tmp_labelHeights.length && typeof this.refs[ref] !== 'undefined') {
+            this.refs[ref].measure((ox, oy, width, height, px, py) => {
+              // if a label is not visible, the height will be 0. Don't set labelHeights for invisible items!
+              if(height>0) { 
+                tmp_labelHeights[i]=height+1; // add margin=1 above text
+              }
+              // only change state when heights of all labels are known.
+              if(tmp_labelHeights.length == numberOfLabels) {
+                this.setState((prevState) => {
+                  return {
+                    labelHeight:tmp_labelHeights
+                  }
+                })
+              }
+            })
+          }
+        })
+      }
+    }
+  }
+
   componentDidMount() {
     setTimeout(() =>  {
-      this.labelRefs.forEach( (ref,i) => {
-        this.refs[ref]._component.measure((ox, oy, width, height, px, py) => {
-          this.setState((prevState) => {
-            return {
-              labelHeight:Object.assign([...prevState.labelHeight],{[i]:height})
-            }
-          })
-        })
-      })
+      this.setLabelHeightsInitially();
     });
+  }
+
+  componentDidUpdate() {
+    this.setLabelHeightsInitially();
   }
 
   scoresAsArray() {
@@ -137,7 +167,10 @@ class Rating extends Component {
 
     const { data } = this.props;
 
-    this.labelRefs.push(`label${i}`);
+    // keep the react-native reference to the label, if it doesn't already exist
+    if(typeof this.labelRefs[i] === 'undefined') {
+      this.labelRefs[i]=`label${i}`;
+    }
 
     let labelContainerStyle = {
       flex:1,
@@ -146,7 +179,7 @@ class Rating extends Component {
       alignSelf:'center',
       position:'absolute',
       overflow:'visible',
-      bottom:-this.state.labelHeight[i],
+      bottom: Number.isNaN(-this.state.labelHeight[i]) ? 0 : -this.state.labelHeight[i],
       transform: [
         {
           translateY:this.state.animations[i].labelValue.interpolate({
@@ -513,12 +546,14 @@ class Rating extends Component {
 
       Animated.spring(o.value, {
         toValue:to ? 1 : 0,
-        duration:225
+        duration:225,
+        useNativeDriver: false
       }).start(callback);
 
       Animated.spring(o.labelValue, {
         toValue:toLabel ? 1 : 0,
-        duration:225
+        duration:225,
+        useNativeDriver: false
       }).start();
     });
   }

@@ -10,7 +10,7 @@
   "peerDependencies": {
     "react": "*",
     "react-native": "*",
-    "react-native-view-shot": "^3.0.2",
+    "react-native-view-shot": "^3.1.2",
     "react-native-webview": "*",
     "@react-native-community/async-storage": "*"
   },
@@ -22,8 +22,9 @@
     "devtools": "react-devtools"
   },
   "dependencies": {
-    "react-native-material-dropdown": "^0.7.1",
-    "react-native-material-textfield": "^0.12.0"
+    "@mopinion-mobile/react-native-material-dropdown": "^1.0.0",
+    "@ubaids/react-native-material-textfield": "^0.16.3",
+    "create-react-class": "^15.6.3"
   },
   "main": "index.js",
   "author": "Mopinion",

@@ -42,13 +42,16 @@ export default class ScreenshotBlock extends React.Component {
       Image.getSize(`data:image/png;base64,${formGroupState.screenshot}`, (width,height) => {
 
         let maxWidth = Dimensions.get('window').width * .8;
-        let maxHeight = Dimensions.get('window').height * .7;
+        let maxHeight = Dimensions.get('window').height * .6;
 
         let imageSize = {};
 
         if (height > maxHeight) {
           imageSize.width = width * (maxHeight / height);
           imageSize.height = maxHeight;
+        } else if(width > maxWidth) {
+          imageSize.width = maxWidth;
+          imageSize.height = height * (maxWidth / width);
         } else {
           imageSize.width = width;
           imageSize.height = height;     
@@ -107,10 +110,18 @@ export default class ScreenshotBlock extends React.Component {
     };
 
     let screenshotContainerStyle = {
-      shadowColor:'#000',
-      shadowOffset:{width:0,height:2},
-      shadowOpacity:.3,
-      shadowRadius:5,
+      ...Platform.select({
+        ios: {
+          shadowColor:'#000',
+          shadowOffset:{width:0,height:2},
+          shadowOpacity:0.3,
+          shadowRadius:5,    
+        },
+        android: {
+          elevation: 3,
+          backgroundColor: 'white'
+        },
+      }),
       height:this.state.imageHeight,
       width:this.state.imageWidth
     };
