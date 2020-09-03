@@ -1,3 +1,11 @@
+# 1.3.0
+- Fix for rating label heights
+- Thanks page margins
+- Update dependencies for TextField and Dropdown components
+- React Native 0.62+ compatibility fixes
+- Decrease Android shadows around screenshot
+- Lower elevation on Android
+
 # 1.2.3
 - Fix UserAgent fetching using a WebView
 
