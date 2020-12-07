@@ -63,6 +63,9 @@ You can send an object of data along with the feedback sent by your users using 
 		meta2:'value2',
 		meta3:'value3'
 	}}
+	fireWhenReady={['event']} //Array of events to fire when to deployment is ready
+	modalAnimationDuration={400} //Customize the animation duration of the feedback dialog, default = 400, set to 0 to disable animations
+
 	onOpen={(data) => {
 		//Fires the moment a form opens
 		//data

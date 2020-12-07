@@ -1,3 +1,8 @@
+# 1.4.0
+- Implement `fireWhenReady` prop
+- Document `modalAnimationDuration` prop
+
+
 # 1.3.0
 - Fix for rating label heights
 - Thanks page margins
