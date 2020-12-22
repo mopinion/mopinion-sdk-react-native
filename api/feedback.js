@@ -43,7 +43,8 @@ export const feedback = {
 			body: JSON.stringify(feedback),
 			headers: {
 				token: feedback.token,
-				domain: feedback.domain
+				domain: feedback.domain,
+				'Content-Type': 'application/json'
 			}
 		};
 		return fetch(url, data)

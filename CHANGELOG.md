@@ -1,3 +1,6 @@
+# 1.4.1
+- Pass Content-Type header when submitting feedback, fixes api post in Android
+
 # 1.4.0
 - Implement `fireWhenReady` prop
 - Document `modalAnimationDuration` prop
