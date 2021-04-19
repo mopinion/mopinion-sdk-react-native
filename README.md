@@ -12,7 +12,7 @@ To install the Mopinion SDK into your React Native Application:
 1. In a terminal window, navigate to the root directory of your project and run:
 
 ```
-npm install mopinion-react-native-sdk react-native-view-shot @react-native-community/async-storage react-native-webview --save
+npm install mopinion-react-native-sdk react-native-view-shot @react-native-async-storage/async-storage react-native-webview --save
 ```
 
 Note: since React Native 60 uses autolinking and the autolinking depth is only of the direct dependencies we now specifiy dependencies which require native modules as peerDependencies. This is a breaking change introduced in version 1.0.0. 
@@ -29,7 +29,7 @@ If you're using React Native 59 and lower do the following as well.
 
 ```
 react-native link react-native-view-shot
-react-native link @react-native-community/async-storage
+react-native link @react-native-async-storage/async-storage
 react-native link react-native-webview
 ```
 
