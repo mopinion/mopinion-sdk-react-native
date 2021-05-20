@@ -134,6 +134,7 @@ class FormPage extends React.Component {
 
       if (block.typeName === 'screenshot') {
         groupProps.screenshotCheckboxLabel = this.props.config.text.screenshotCheckboxLabel;
+        groupProps.screenshotCaption = this.props.config.text.screenshotCaption;
       }
 
       if (Number(o.page) === Number(fromPage)) {

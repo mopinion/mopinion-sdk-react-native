@@ -62,7 +62,8 @@ class FormGroup extends React.Component {
   }
 
   onChildGroupValueChange(value,data) {
-    this.props.updateFormState({value:value},data,this.props.elementIndex);
+	const updateValue = typeof value === 'object' ? value : {value};
+    this.props.updateFormState(updateValue,data,this.props.elementIndex);
   }
 
   getBlock() { 
@@ -122,7 +123,8 @@ class FormGroup extends React.Component {
     } else if (data.typeName === 'screenshot') { 
 
       blockProps.screenshotCheckboxLabel = this.props.screenshotCheckboxLabel;
-      
+      blockProps.screenshotCaption = this.props.screenshotCaption;
+
       return (
         <ScreenshotBlock {...blockProps}  />
       );
