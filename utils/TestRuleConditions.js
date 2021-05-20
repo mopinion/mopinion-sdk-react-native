@@ -1,6 +1,6 @@
 import React from 'react';
 import { Platform } from 'react-native';
-import AsyncStorage from '@react-native-community/async-storage'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import { getKeys } from '../utils/getKeys';
 
 export async function testRuleConditions(rule,event) {
@@ -21,9 +21,8 @@ export async function testRuleConditions(rule,event) {
 		// 	    });
 		// },
 		percentage(perc) {
-			const nth = (n) => { return Math.floor(Math.random() * n) + 1 };
-			let n = Math.floor(100/perc);
-			return n === nth(n)
+			const rnd = Math.round((Math.random() * 100))
+			return rnd < Number(perc);
 		},
 		target(targetArr) {
 			const testTarget = (target) => {
