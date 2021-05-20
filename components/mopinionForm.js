@@ -719,7 +719,14 @@ export class Mopinion extends React.Component {
 
 				} else if (block.field.indexOf('screenshot') > -1) {
 					//only send screenie if value checkbox is toggled
-					feedbackValue = feedbackObj.value === 'send_screenshot' && this.props.screenshot != null && this.props.screenshot != "" ? this.props.screenshot : '';
+					if (feedbackObj.value === 'send_screenshot') {
+						feedbackValue = feedbackObj.screenshot ? feedbackObj.screenshot : this.props.screenshot
+						if (feedbackValue == null) { 
+							feedbackValue = '';
+						}
+					} else {
+						feedbackValue = '';
+					}
 				} else {
 					feedbackValue = feedbackObj.value || '';
 				}
@@ -737,7 +744,7 @@ export class Mopinion extends React.Component {
 		getKeys(metaData).forEach(metaDataKey => {
 			data.push({
 				label:metaDataKey,
-				value:metaData[metaDataKey],
+				value:metaData[metaDataKey] ?? '',
 				type:'category'
 			});
 		});
@@ -934,26 +941,26 @@ export class Mopinion extends React.Component {
 					startOpen={this.static}
 					animationDuration={this.static ? 0 : this.props.modalAnimationDuration}
 				>
-					<Header
-						onPressLeft={() => this.toggleModal()}
-						title={!this.state.formIsFullySubmmitted ? this.state.formConfig.properties.title : this.state.formConfig.text.lastPageTitle ? this.state.formConfig.text.lastPageTitle : this.state.formConfig.properties.title}
-					/>
-					<ScrollView
-						style={styles.container}
-						automaticallyAdjustContentInsets
-						contentInsetAdjustmentBehavior="automatic"
-						contentContainerStyle={{
-							flexGrow:1, 
-							justifyContent:'flex-start', 
-							...(Platform.OS === 'android' && {paddingBottom:24})
-						}}
-						ref='_scrollView'
-						onScroll={this.handleScroll}
-						scrollEventThrottle={50}
-						scrollEnabled={!this.state.isSwiping}
+					<SafeAreaView style={{flex:1}}>
+						<Header
+							onPressLeft={() => this.toggleModal()}
+							title={!this.state.formIsFullySubmmitted ? this.state.formConfig.properties.title : this.state.formConfig.text.lastPageTitle ? this.state.formConfig.text.lastPageTitle : this.state.formConfig.properties.title}
+						/>
+						<ScrollView
+							style={styles.container}
+							automaticallyAdjustContentInsets
+							contentInsetAdjustmentBehavior="automatic"
+							contentContainerStyle={{
+								flexGrow:1, 
+								justifyContent:'flex-start', 
+								...(Platform.OS === 'android' && {paddingBottom:24})
+							}}
+							ref='_scrollView'
+							onScroll={this.handleScroll}
+							scrollEventThrottle={50}
+							scrollEnabled={!this.state.isSwiping}
 
-					>
-						<SafeAreaView style={{flex:1}}>
+						>
 							<Animated.View
 								style={{
 									flex:1,
@@ -965,8 +972,8 @@ export class Mopinion extends React.Component {
 									: this.state.configWasLoaded ? this.getPage() : this.loading()
 								}
 							</Animated.View>
-						</SafeAreaView>
-					</ScrollView>
+						</ScrollView>
+					</SafeAreaView>
 				</Modal>
 			</ThemeProvider>
 		);
