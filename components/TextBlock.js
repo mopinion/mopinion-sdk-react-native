@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, Text} from 'react-native';
 import PropTypes from 'prop-types';
-import { TextField } from 'rn-material-ui-textfield';
+import { TextField } from './TextField';
 import ErrorMessage from './ErrorMessage';
 import withTheme from '../core/withTheme'
 
@@ -35,6 +35,9 @@ class TextBlock extends React.Component {
       labelPadding:0,
       textColor:theme.darkTextColor || null,
       tintColor:theme.selectedControlColor,
+      contentInset: {
+        top:placeholder ? 0 : -16
+      }
     };
 
     // if (this.props.formGroupState.showError) {

@@ -1,6 +1,5 @@
 # 2.0.0
 - Implement upload screenshot functionality through `react-native-image-picker`
-- Implement conditional import of `react-native-view-shot` as well as `react-native-image-picker`, these packages are now no longer required when using `mopinion-react-native-sdk`
 - Update dependency from deprecated `@react-native-community/async-storage` to `@react-native-async-storage/async-storage`
 - Update dependency from `@ubaids/react-native-material-textfield` to `rn-material-ui-textfield`
 - Fix percentage test in `TestRuleConditions.percentage`

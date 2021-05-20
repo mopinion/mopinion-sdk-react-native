@@ -1,7 +1,7 @@
 {
   "name": "mopinion-react-native-sdk",
   "description": "Collect in-app feedback with Mopinion for React Native. Built fully in React Native for optimal integration with your RN app.",
-  "version": "2.0.0-beta1",
+  "version": "2.0.0-beta3",
   "devDependencies": {
     "babel-preset-react-native-stage-0": "^1.0.1",
     "react-devtools": "^3.2.1",
@@ -12,8 +12,7 @@
     "react-native": "*",
     "react-native-view-shot": "^3.1.2",
     "react-native-webview": "*",
-    "@react-native-async-storage/async-storage": "*",
-    "react-native-image-picker": "^3.3.2"
+    "@react-native-async-storage/async-storage": "*"
   },
   "scripts": {
     "start": "react-native start",
@@ -23,9 +22,8 @@
     "devtools": "react-devtools"
   },
   "dependencies": {
-    "@mopinion-mobile/react-native-material-dropdown": "^1.0.2",
-    "rn-material-ui-textfield": "^1.0.2",
-    "create-react-class": "^15.6.3"
+    "create-react-class": "^15.6.3",
+    "react-native-image-picker": "^3.3.2"
   },
   "main": "index.js",
   "author": "Mopinion",

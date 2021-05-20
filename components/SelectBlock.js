@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Text, View, StyleSheet } from 'react-native';
-import { Dropdown } from '@mopinion-mobile/react-native-material-dropdown';
+import { Dropdown } from './Dropdown';
 import ErrorMessage from './ErrorMessage';
 import withTheme from '../core/withTheme';
 import { getKeys } from '../utils/getKeys';
@@ -38,7 +38,10 @@ class SelectBlock extends React.Component {
       value:this.state.selected1,
       onChangeText:this.onValueChange.bind(this),
       labelHeight:placeholder ? 12 : 0,
-      rippleInsets: {top:placeholder ? -4 : -16}
+      rippleInsets: {top:placeholder ? 0 : -8},
+      contentInset: {
+        top:placeholder ? 0 : -16
+      }
     };
     return (
       <View>  
