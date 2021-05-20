@@ -12,7 +12,8 @@
     "react-native": "*",
     "react-native-view-shot": "^3.1.2",
     "react-native-webview": "*",
-    "@react-native-async-storage/async-storage": "*"
+    "@react-native-async-storage/async-storage": "*",
+    "react-native-image-picker": "^3.3.2"
   },
   "scripts": {
     "start": "react-native start",
@@ -22,8 +23,7 @@
     "devtools": "react-devtools"
   },
   "dependencies": {
-    "create-react-class": "^15.6.3",
-    "react-native-image-picker": "^3.3.2"
+    "create-react-class": "^15.6.3"
   },
   "main": "index.js",
   "author": "Mopinion",
