@@ -11,7 +11,7 @@ import { Mopinion } from '../components/mopinionForm';
 import { logger } from '../api/logger';
 import { feedback } from '../api/feedback';
 import { UserAgent } from '../utils/UserAgent';
-
+import { captureScreen } from 'react-native-view-shot';
 export default class MopinionDeployment extends React.Component {
 	constructor(props) {
 		super(props);
@@ -116,25 +116,21 @@ export default class MopinionDeployment extends React.Component {
 				if ( await testRuleConditions(o, ev) ) {
 					//update(r)
 
-					import('react-native-view-shot')
-						.then(({captureScreen}) => {
-							try {
-								captureScreen({
-									format: 'png',
-									quality: 0.8,
-									result:'base64'
-								})
-								.then(
-									uri => update(uri, 'image/png', o.rule_id),
-									error => update('', '', o.rule_id)
-								);
-							} catch(e) {
-								update('', '', o.rule_id);
-							}
+
+					try {
+						captureScreen({
+							format: 'png',
+							quality: 0.8,
+							result:'base64'
 						})
-						.catch(err => {
-							update('', '', o.rule_id);
-						})
+						.then(
+							uri => update(uri, 'image/png', o.rule_id),
+							error => update('', '', o.rule_id)
+						);
+					} catch(e) {
+						update('', '', o.rule_id);
+					}
+
 				}
 			});
 		}

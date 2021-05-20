@@ -4,9 +4,7 @@ import Control from './Control';
 import ErrorMessage from './ErrorMessage';
 import Button from './Button';
 
-
-// to select the default screenshot or an image from the photo library
-// if the user selects an image, the button changes face to revert to default screenshot
+import * as ImagePicker from 'react-native-image-picker';
 class ImagePickerControl extends React.Component {
       
   static defaultProps = {
@@ -83,24 +81,24 @@ class ImagePickerControl extends React.Component {
       this.toggleButtonFace();
       this.setImagePickerResponse(null);
     } else {
-      import('react-native-image-picker').then(ImagePicker => {
-        ImagePicker.launchImageLibrary(
-          {
-          mediaType: 'photo',
-          includeBase64: true,
-          maxHeight: this.props.maxImageHeight,
-          maxWidth: this.props.maxImageWidth,
-          },
-          (response) => {
-            // process the response for the right type
-            if(response && response.uri !== ""  && response.didCancel !== true && this.validatePickedImage(response) ) {
-            this.toggleButtonFace();
 
-            this.setImagePickerResponse(response);
-            }
-          },
-        );
-      })
+      ImagePicker.launchImageLibrary(
+        {
+        mediaType: 'photo',
+        includeBase64: true,
+        maxHeight: this.props.maxImageHeight,
+        maxWidth: this.props.maxImageWidth,
+        },
+        (response) => {
+          // process the response for the right type
+          if(response && response.uri !== ""  && response.didCancel !== true && this.validatePickedImage(response) ) {
+          this.toggleButtonFace();
+
+          this.setImagePickerResponse(response);
+          }
+        },
+      );
+
     }
   }
   
