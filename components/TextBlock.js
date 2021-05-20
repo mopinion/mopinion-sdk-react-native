@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, Text} from 'react-native';
 import PropTypes from 'prop-types';
-import { TextField } from '@ubaids/react-native-material-textfield';
+import { TextField } from 'rn-material-ui-textfield';
 import ErrorMessage from './ErrorMessage';
 import withTheme from '../core/withTheme'
 
