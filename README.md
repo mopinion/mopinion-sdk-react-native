@@ -12,28 +12,16 @@ To install the Mopinion SDK into your React Native Application:
 1. In a terminal window, navigate to the root directory of your project and run:
 
 ```
-npm install mopinion-react-native-sdk @react-native-async-storage/async-storage react-native-webview --save
-```
-
-2. If you want to use the screenshot functionality
-   
-```
-npm install react-native-view-shot --save
-```
-
-3. If you want to use the upload screenshot functionality
-   
-```
-npm install react-native-image-picker --save
+npm install mopinion-react-native-sdk @react-native-async-storage/async-storage react-native-webview react-native-view-shot react-native-image-picker --save
 ```
 
 Note: since React Native 60 uses autolinking and the autolinking depth is only of the direct dependencies we now specifiy dependencies which require native modules as peerDependencies. This is a breaking change introduced in version 1.0.0. 
 
-4. Link assets by running the following command in your projects root directory:
+2. Link assets by running the following command in your projects root directory:
 
 `react-native link mopinion-react-native-sdk`
 
-5. Install native modules by running pod install. Run the following command from your root directory.
+3. Install native modules by running pod install. Run the following command from your root directory.
 
 `cd ios && pod install && cd ..`
 
@@ -46,14 +34,14 @@ react-native link react-native-webview
 react-native link react-native-image-picker
 ```
 
-6. Optional: When using the image upload functionality
+4. Optional: When using the image upload functionality
 
-The SDK allows users to pick an image from her/his mobile device to upload as a screenshot. 
-To enable this on iOS, in Xcode make sure to add the `Privacy - Photo Library Usage Description` permission to the `Info.plist` of your app if it is missing :
+The SDK allows users to pick an image from her/his device to upload as a screenshot. 
+To enable this on iOS, in Xcode make sure to add the `Privacy - Photo Library Usage Description` permission to the `Info.plist` of your app if it is missing:
 
 ```
 <key>NSPhotoLibraryUsageDescription</key>
-	<string>To use an image from your library as a screenshot</string>
+<string>To use an image from your library as a screenshot</string>
 ```
 
 ## Implementing the SDK
