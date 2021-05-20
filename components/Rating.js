@@ -103,48 +103,39 @@ class Rating extends Component {
     });
   }
 
-  /* Calculate height of all labels and store in this.state.labelHeight[] in one call. 
+
+  /* Calculate height of all labels and store in this.state.labelHeight[]  
      Ratings that start hidden will have no labelRefs.
      The labelRefs are only set during their render by the _label() function when made visible.
-     This function is optimised for use in componentDidMount. */
-  setLabelHeightsInitially() {
-    var tmp_labelHeights = [];
-    // the labelRefs are only set during their render by the _label() function
-    var numberOfLabels=this.labelRefs.length;
-    
+     This function can use both measure methods from the refs API change between RN 0.61.5 and 0.64. */
+  updateLabelHeights() {
+	this.labelRefs.forEach( (ref,i) => {
     // for some rating types this property will be === 'undefined' which is ok as they have no labels anyway :)
-    if(this.props.data.properties.showCaptions) {
-      if(this.state.labelHeight.length < this.labelRefs.length) {
-        this.labelRefs.forEach( (ref,i) => {
-          if(i>=tmp_labelHeights.length && typeof this.refs[ref] !== 'undefined') {
-            this.refs[ref].measure((ox, oy, width, height, px, py) => {
-              // if a label is not visible, the height will be 0. Don't set labelHeights for invisible items!
-              if(height>0) { 
-                tmp_labelHeights[i]=height+1; // add margin=1 above text
-              }
-              // only change state when heights of all labels are known.
-              if(tmp_labelHeights.length == numberOfLabels) {
-                this.setState((prevState) => {
-                  return {
-                    labelHeight:tmp_labelHeights
-                  }
-                })
-              }
-            })
-          }
-        })
-      }
-    }
-  }
-
-  componentDidMount() {
-    setTimeout(() =>  {
-      this.setLabelHeightsInitially();
-    });
+		if(this.props.data.properties.showCaptions) {
+		  if(typeof this.refs[ref] !== 'undefined') {
+		  	var curComponent = this.refs[ref];	// assume RN 0.64
+			 if(typeof this.refs[ref]._component !== 'undefined') {
+			 	curComponent = this.refs[ref]._component;	// RN 0.61.5
+			 }
+			 if(typeof curComponent.measure !== 'undefined') {
+				curComponent.measure((ox, oy, width, height, px, py) => {
+				  var prevHeight = (typeof this.state.labelHeight[i] !== 'undefined') ? this.state.labelHeight[i] : 0;
+				  if(height > prevHeight) {
+					  this.setState((prevState) => {
+						return {
+						  labelHeight:Object.assign([...prevState.labelHeight],{[i]:height})
+						}
+					  })
+				  }
+				})
+			 }
+		  }
+		}
+	})
   }
 
   componentDidUpdate() {
-    this.setLabelHeightsInitially();
+    this.updateLabelHeights();
   }
 
   scoresAsArray() {
