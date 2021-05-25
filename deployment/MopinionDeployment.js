@@ -11,9 +11,7 @@ import { Mopinion } from '../components/mopinionForm';
 import { logger } from '../api/logger';
 import { feedback } from '../api/feedback';
 import { UserAgent } from '../utils/UserAgent';
-
 import { captureScreen } from 'react-native-view-shot';
-
 export default class MopinionDeployment extends React.Component {
 	constructor(props) {
 		super(props);
@@ -106,8 +104,8 @@ export default class MopinionDeployment extends React.Component {
 	}
 	eventHandler(ev) {
 		const { events } = this.state;
-		const update = (uri,rule) => {
-			this.setState({screenshot:uri}, () => {
+		const update = (uri,imageType,rule) => {
+			this.setState({screenshot:uri, screenshotImageType:imageType}, () => {
 				this.updateOpenState(rule, true,	() => { 
 					this.refs[rule].toggleModal(true);
 				})
@@ -117,6 +115,8 @@ export default class MopinionDeployment extends React.Component {
 			events[ev].forEach(async (o) => {
 				if ( await testRuleConditions(o, ev) ) {
 					//update(r)
+
+
 					try {
 						captureScreen({
 							format: 'png',
@@ -124,11 +124,11 @@ export default class MopinionDeployment extends React.Component {
 							result:'base64'
 						})
 						.then(
-							uri => update(uri,o.rule_id),
-							error => update('',o.rule_id)
+							uri => update(uri, 'image/png', o.rule_id),
+							error => update('', '', o.rule_id)
 						);
 					} catch(e) {
-						update('',o.rule_id);
+						update('', '', o.rule_id);
 					}
 
 				}

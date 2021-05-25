@@ -1,3 +1,10 @@
+# 2.0.0
+- Implement upload screenshot functionality through `react-native-image-picker`
+- Update dependency from deprecated `@react-native-community/async-storage` to `@react-native-async-storage/async-storage`
+- Remove deprecated `react-native-material-textfield` and `react-native-material-dropdown` depedencies, fork them and modify to fix issues with newer RN versions and import into package
+- Fix percentage test in `TestRuleConditions.percentage`
+- Fix rating labels in `Rating` component
+  
 # 1.4.1
 - Pass Content-Type header when submitting feedback, fixes api post in Android
 
