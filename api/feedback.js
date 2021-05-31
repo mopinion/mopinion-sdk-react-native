@@ -37,7 +37,7 @@ export const feedback = {
 		});
 	},
 	postFeedback(feedback) {
-		const url = 'https://survey.collect.mopinion.com/api/1/data';
+		const url = 'https://survey.mopinion.com/api/1/data';
 		let data = {
 			method: 'POST',
 			body: JSON.stringify(feedback),
