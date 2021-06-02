@@ -34,6 +34,8 @@ react-native link react-native-webview
 react-native link react-native-image-picker
 ```
 
+Note: Xcode 12.5 requires at least React Native 0.64.1. 
+
 4. Optional: When using the image upload functionality
 
 The SDK allows users to pick an image from her/his device to upload as a screenshot. 

@@ -62,8 +62,11 @@ class ImagePickerControl extends React.Component {
 	validatePickedImage(response) {
 		if(response && response.uri !== "" ) {
 			switch(response.type) {
-				case 'image/png':
 				case 'image/jpg':
+					response.type = 'image/jpeg';	// convert to MIME standard
+					break;
+				case 'image/jpeg':
+				case 'image/png':
 					break;
 				default:
 					Alert.alert('Unsupported Image', `Format '${response.type}' is not supported. Please select a JPG or PNG image.`);
