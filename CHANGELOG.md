@@ -1,3 +1,7 @@
+# 2.0.1
+- MIME JPEG fix
+- Feedback API URL change
+
 # 2.0.0
 - Implement upload screenshot functionality through `react-native-image-picker`
 - Update dependency from deprecated `@react-native-community/async-storage` to `@react-native-async-storage/async-storage`
