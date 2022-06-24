@@ -1,3 +1,7 @@
+# 2.1.0
+- Add Mopinion Metrics
+- Webform autoclose
+
 # 2.0.1
 - MIME JPEG fix
 - Feedback API URL change

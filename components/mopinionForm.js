@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { SafeAreaView, Dimensions, NativeModules, View, ScrollView, StyleSheet, Text, ActivityIndicator, Platform, Animated, Keyboard, LayoutAnimation, BackHandler } from 'react-native';
-import { WebView } from 'react-native-webview'
+import { WebView } from 'react-native-webview';
 //import * as Expo from 'expo';
 import {feedback} from '../api/feedback';
 import {logger} from '../api/logger';
@@ -12,6 +12,8 @@ import FormPage from './FormPage';
 import { ThemeProvider } from '../core/ThemeProvider';
 
 import { getKeys } from '../utils/getKeys';
+
+import Track from '../utils/Track';
 
 let CLICKED_ELEMENT = '';
 
@@ -24,6 +26,7 @@ export class Mopinion extends React.Component {
 		callParentWhenClosed:() => {},
 		modalAnimationDuration:400,
 		metaData: {},
+		formType:'modal',
 		onOpen:() => {},
 		onFormLoaded:() => {},
 		onClose:() => {},
@@ -66,11 +69,14 @@ export class Mopinion extends React.Component {
 			isSwiping:false,
 			modalStyle:'small',
 			modalBackdrop:true,
+			isFetchConfigInProgress:false,
 			formIsFullySubmmitted:false,
-			formStatus:''
+			formStatus:'',
+			formType:props.formType
 		};
 
 		this.handleScroll = this.handleScroll.bind(this);
+		this.track = new Track();
 	}
 
 	UNSAFE_componentWillMount() {
@@ -83,8 +89,8 @@ export class Mopinion extends React.Component {
 		this.keyboardWillHideSub = Keyboard.addListener(hideEvent, this.keyboardHidden);
 
 		if (NativeModules.UIManager && NativeModules.UIManager.setLayoutAnimationEnabledExperimental) {
-      NativeModules.UIManager.setLayoutAnimationEnabledExperimental(true);
-    }
+      		NativeModules.UIManager.setLayoutAnimationEnabledExperimental(true);
+    	}
 
 		this.setState({isReady: true});
 	}
@@ -98,10 +104,8 @@ export class Mopinion extends React.Component {
 	}
 
 	componentWillUnmount() {
-
 		this.keyboardWillShowSub.remove();
 		this.keyboardWillHideSub.remove();
-
 
 		BackHandler.removeEventListener('hardwareBackPress', this.handleBackHandler)
 	}
@@ -115,13 +119,21 @@ export class Mopinion extends React.Component {
 	// }
 
 	async componentDidMount() {
-		if (this.state.modalVisible && !this.state.configWasLoaded) this.fetchConfig();
+		if (this.state.modalVisible && !this.state.configWasLoaded) {
+			this.fetchConfig( () => {
+				if(this.static) {
+					// static forms open immediately without first calling toggleModal , so send metrics here.
+					// now after the callback from fetchConfig the .track object is set and loaded
+					this.sendFormMetricsEvent("Form shown");
+				}
+			});
+		}
 
 		BackHandler.addEventListener('hardwareBackPress', this.handleBackHandler);
 	}
 
  	//Fetch form data from API async and set state
- 	async fetchConfig() {
+ 	async fetchConfig(callbackConfigWasLoaded) {
 
 		const config = `https://${this.props.form.domain}/survey/public/json-stream?key=${this.props.form.formKey}`;
 		const thisRef = this;
@@ -256,6 +268,17 @@ export class Mopinion extends React.Component {
 		      },
 		    });
 
+			//init tracker with surveykey and name
+			const trackerConfig = {
+				...json,
+				screenSize:thisRef.props.screenSize
+			}
+			if(thisRef.track == null) {
+				thisRef.track = new Track(trackerConfig);
+			} else {
+				thisRef.track.setConfig(trackerConfig); // instead of this.state.formConfig
+			}
+
 			thisRef.setState((prevState) => {
 				let messages = Object.assign(prevState.errorMessages, json.text.errors);
 				return {
@@ -266,11 +289,15 @@ export class Mopinion extends React.Component {
 					breakBlocks:breakBlocks
 				}
 			}, () => {
-
 				this.props.onFormLoaded({
+					event:'shown',
 					formKey:this.state.formConfig.surveyKey,
 					formName:this.state.formConfig.properties.name
 				});
+
+				if(typeof(callbackConfigWasLoaded) === 'function') {
+					callbackConfigWasLoaded();
+				}
 			});
 		})
   }
@@ -543,6 +570,23 @@ export class Mopinion extends React.Component {
 		element.normalizedLogic.forEach(rule => checkRule(rule));
 	}
 
+	// internal helper to send a formMetrics event with implicit eventProps
+	sendFormMetricsEvent(metricsEvent) {
+		// formConfig must have been loaded in advance 
+		if(this.track != null && this.state.configWasLoaded) {
+			this.track.send(metricsEvent, {
+				event_trigger:this.props.triggeredEvent,
+				trigger_method:this.props.form.trigger,
+				form_completion_percentage: this.state.formIsFullySubmmitted ? 100 : Math.round(( Math.max(this.state.currentPage-1,0) / Object.keys(this.state.formConfig.pageMap).length) * 100),
+				active_page:this.state.currentPage,
+				page_count:Object.keys(this.state.formConfig.pageMap).length,
+				form_type:this.state.formType,
+				subdomain:this.props.form.domain,
+				organisation_id:this.state.formConfig.properties.organisation_id,
+				project_id:this.state.formConfig.properties.project_id
+			});
+		}
+	}
 
 	//Function for posting feedback to api as formdata
 	postFeedback() {
@@ -645,7 +689,7 @@ export class Mopinion extends React.Component {
 		});
 	}
 
-  mopinionEvent(id) {
+  	mopinionEvent(id) {
 		this.props.mopinionEvent(id);
 	}
 
@@ -663,16 +707,44 @@ export class Mopinion extends React.Component {
 			} catch(e) {}
 
 			this.props.onFeedbackSent({
+				event:'feedback_sent',
 				formKey:this.state.formConfig.surveyKey,
 				formName:this.state.formConfig.properties.name,
 				feedback:parsed.feedback
 			});
 		}
 
+		const handleWebviewEvent = data => {
+			let parsed = {};
+			try {
+				parsed = JSON.parse(data);
+
+				switch(parsed.event) {
+					case 'feedback_sent':
+						handleFeedbackSent(data);
+						break;
+					case 'hidden':
+						//if autoclose is set
+						if (this.state.formConfig.properties.timeout && typeof this.state.formConfig.properties.timeout === 'number') {
+							this.props.callParentWhenClosed(this.state.formIsFullySubmmitted);
+						}
+						break;
+					default:
+						logger.log('Ignoring unsupported webview event: ' + parsed.event);
+				}
+			} catch(e) {
+				logger.log('Error parsing webview event: ' + e)
+			}
+			
+		}
+
 		const injectMetaData = `(function() {
 			window.metaData = ${JSON.stringify(metaData)};
 			try {
 				document.addEventListener('mopinion_feedback_sent', function(e) {
+					window.ReactNativeWebView.postMessage(JSON.stringify(e.detail));
+				});
+				document.addEventListener('mopinion_hidden', function(e) {
 					window.ReactNativeWebView.postMessage(JSON.stringify(e.detail));
 				});
 			} catch(e) {
@@ -686,7 +758,7 @@ export class Mopinion extends React.Component {
 				source={{uri: uri}}
 				scalesPageToFit={false}
 				injectedJavaScript={injectMetaData}
-				onMessage={e => handleFeedbackSent(e.nativeEvent.data)}
+				onMessage={e => handleWebviewEvent(e.nativeEvent.data)}
 			/>
 		);
 	}
@@ -778,6 +850,7 @@ export class Mopinion extends React.Component {
 			thisRef.setState({formStatus:'done-posting'}, () => {
 
 				this.props.onFeedbackSent({
+					event:'feedback_sent',
 					formKey:this.state.formConfig.surveyKey,
 					formName:this.state.formConfig.properties.name,
 					feedback:data
@@ -785,9 +858,13 @@ export class Mopinion extends React.Component {
 
 				setTimeout(() => {
 					thisRef.setState({formIsFullySubmmitted:true}, () => {
-						//if autoclose is set
-						if (thisRef.state.formConfig.timeout && typeof thisRef.state.formConfig.timeout === 'number') {
-							setTimeout(() => {this.toggleModal()},thisRef.state.formConfig.timeout)
+                        this.sendFormMetricsEvent("Feedback sent");
+
+						//if autoclose is set; -1 is don't show, null or 0 is don't close
+						if(thisRef.state.formConfig.properties.timeout!=0) {							
+							if (thisRef.state.formConfig.properties.timeout && typeof thisRef.state.formConfig.properties.timeout === 'number') {
+								setTimeout(() => {this.toggleModal()},thisRef.state.formConfig.properties.timeout)
+							}
 						}
 					})
 				},300)
@@ -805,34 +882,68 @@ export class Mopinion extends React.Component {
 		if (this.static) {
 			// native static form
 			this.props.mopinionEvent(null);
+			if (this.state.modalVisible) {
+				this.props.onClose({
+				  event:'hidden',
+				  formKey:this.state.formConfig.surveyKey,
+				  formName:this.state.formConfig.properties.name
+			  });
+
+			  this.sendFormMetricsEvent("Form hidden");
+			}
+
 		} else {
-	  	this.setState((prevState) => {
-	  		return {
-	  			modalVisible:typeof(force) !== 'undefined' ? force : !prevState.modalVisible
-	  		}
-	  	}, () => {
-	  		if (this.state.modalVisible && !this.state.configWasLoaded) this.fetchConfig();
 
-	  		if (this.state.modalVisible) {
-		  		this.props.onOpen({
-						formKey:this.props.form.formKey,
-						...(this.state.formConfig.properties.name && {
-							formName:this.state.formConfig.properties.name
+            this.setState((prevState) => {
+                return {
+                    modalVisible:typeof(force) !== 'undefined' ? force : !prevState.modalVisible                }
+            }, () => {
+				if (this.state.modalVisible && !this.state.configWasLoaded) {
+
+					if(!this.state.isFetchConfigInProgress) {
+						this.setState( {
+							isFetchConfigInProgress: true
+						}, () => {
+							this.fetchConfig( () => {
+								// now after the callback from fetchConfig the .track object is set and loaded
+								if(!this.props.form.webview) {
+									this.sendFormMetricsEvent("Form shown");
+								}
+								this.setState( {
+									isFetchConfigInProgress: false
+								})
+							});	
 						})
-					});
-		  	}
+					}
+				}
 
-	  		if (!this.state.modalVisible) {
-		  		this.props.onClose({
+				// no need to check this.static as a static form is already open and hence won't call the onOpen here
+				if (this.state.modalVisible) {
+					this.props.onOpen({
+							formKey:this.props.form.formKey,
+							...(this.state.formConfig.properties.name && {
+								formName:this.state.formConfig.properties.name
+							})
+						});
+				}
+
+				if (!this.state.modalVisible) {
+					this.props.onClose({
+						event:'hidden',
 						formKey:this.state.formConfig.surveyKey,
 						formName:this.state.formConfig.properties.name
 					});
-	  			setTimeout(()=>{this.props.callParentWhenClosed(this.state.formIsFullySubmmitted)},this.props.modalAnimationDuration);
-	  		}
 
-	  	});
-	  }
-  }
+					if(!this.props.form.webview) {
+						this.sendFormMetricsEvent("Form hidden");
+					}
+
+					setTimeout(()=>{this.props.callParentWhenClosed(this.state.formIsFullySubmmitted)},this.props.modalAnimationDuration);
+				}
+
+			});
+		}
+	}
 
   //Function for navigating pages
   setPage(add=true, toPage=false) {
@@ -841,7 +952,9 @@ export class Mopinion extends React.Component {
     	this.setState((prevState) => {
     		const newPage = add ? prevState.currentPage + 1 : prevState.currentPage - 1;
     		return {currentPage:newPage};
-    	});
+    	},() => {
+			this.sendFormMetricsEvent((add ? 'Next' : 'Previous') + " page");
+		});
     }
   }
 
@@ -924,7 +1037,6 @@ export class Mopinion extends React.Component {
 			<ThemeProvider
 				theme={String(this.state.formConfig.theme)}
 				custom={this.state.formConfig.themeCustom}
-				ref={'_theme'}
 			>
 				<Modal
 					ref={"mopinion"}

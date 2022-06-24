@@ -89,13 +89,16 @@ export default class MopinionDeployment extends React.Component {
 		})
 		.catch(e => console.log(e))
 	}
-	updateOpenState(rule_id,show,f, isFullySubmitted) {
+	updateOpenState(rule_id,show,f, triggeredEvent, isFullySubmitted) {
 		this.setState((prevState) => {
 			return {
 				...prevState,
 				forms: {
 					...prevState.forms,
-					[rule_id]: {open:show,instance: isFullySubmitted ? rnd() : prevState.forms[rule_id].instances}
+					[rule_id]: { open:show,
+						instance: isFullySubmitted ? rnd() : prevState.forms[rule_id].instances,
+						triggeredEvent:triggeredEvent ? triggeredEvent : prevState.forms[rule_id].triggeredEvent
+					}
 				}
 			}
 		},() => {
@@ -108,14 +111,12 @@ export default class MopinionDeployment extends React.Component {
 			this.setState({screenshot:uri, screenshotImageType:imageType}, () => {
 				this.updateOpenState(rule, true,	() => { 
 					this.refs[rule].toggleModal(true);
-				})
+				}, ev)
 			});
 		};
 		if (events.hasOwnProperty(ev)) {
-			events[ev].forEach(async (o) => {
+			events[ev].map(async (o) => {
 				if ( await testRuleConditions(o, ev) ) {
-					//update(r)
-
 
 					try {
 						captureScreen({
@@ -124,8 +125,9 @@ export default class MopinionDeployment extends React.Component {
 							result:'base64'
 						})
 						.then(
-							uri => update(uri, 'image/png', o.rule_id),
-							error => update('', '', o.rule_id)
+							// KvW: first run after added log, the problem was gone, but then back again
+							uri => { update(uri, 'image/png', o.rule_id) } ,
+							error => { update('', '', o.rule_id) }
 						);
 					} catch(e) {
 						update('', '', o.rule_id);
@@ -177,16 +179,18 @@ export default class MopinionDeployment extends React.Component {
 						form={{
 							formKey:o.formKey,
 							domain:o.domain,
+							trigger:o.trigger,
 							webview:o.webview
 						}}
-						screenSize={`${Dimensions.get('window').width}x${Dimensions.get('window').height}`}
+						screenSize={`${Math.round(Dimensions.get('window').width)}x${Math.round(Dimensions.get('window').height)}`}
 						userAgent={this.state.userAgent}
 						screenshot={this.state.screenshot}
 						ref={o.rule_id}
 						callParentWhenClosed={ (isFullySubmitted) => {
-								this.updateOpenState(o.rule_id, false, () => {}, isFullySubmitted);
+								this.updateOpenState(o.rule_id, false, () => {}, undefined, isFullySubmitted);
 							}
 						}
+						triggeredEvent={form.triggeredEvent}
 						onOpen={this.handleOpen}
 						onFormLoaded={this.handleFormLoaded}
 						onClose={this.handleClose}
