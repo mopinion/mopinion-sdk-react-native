@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
-import { Animated, Text } from 'react-native';
+import { Animated } from 'react-native';
+import { TextPropTypes } from 'deprecated-react-native-prop-types';
 
 import styles from './styles';
 
@@ -43,7 +44,7 @@ export default class Label extends PureComponent {
       y1: PropTypes.number,
     }),
 
-    style: Text.propTypes.style,
+    style: TextPropTypes.style,
     label: PropTypes.string,
   };
 
