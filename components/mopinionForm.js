@@ -135,7 +135,7 @@ export class Mopinion extends React.Component {
  	//Fetch form data from API async and set state
  	async fetchConfig(callbackConfigWasLoaded) {
 
-		const config = `https://${this.props.form.domain}/survey/public/json-stream?key=${this.props.form.formKey}`;
+		const config = `https://cacheorcheck.mopinion.com/survey/public/json-stream?key=${this.props.form.formKey}&domain=${this.props.form.domain}`;
 		const thisRef = this;
 
 		fetch(config, {
@@ -939,7 +939,6 @@ export class Mopinion extends React.Component {
 			>
 				<Modal
 					ref={"mopinion"}
-					backdrop={true}
 					style={styles.modal}
 					isOpen={this.state.modalVisible}
 					swipeToClose={false}
