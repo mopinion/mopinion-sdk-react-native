@@ -800,7 +800,7 @@ export class Mopinion extends React.Component {
 						feedbackValue = '';
 					}
 				} else {
-					feedbackValue = feedbackObj.value || '';
+					feedbackValue = String(feedbackObj.value) || '';
 				}
 			}
 
