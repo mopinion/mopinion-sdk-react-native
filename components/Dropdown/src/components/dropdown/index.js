@@ -12,6 +12,7 @@ import {
   ViewPropTypes,
   I18nManager,
 } from 'react-native';
+import { TextPropTypes } from 'deprecated-react-native-prop-types';
 import { Ripple } from '../../../../Ripple';
 import { TextField } from '../../../../TextField';
 
@@ -132,7 +133,7 @@ export default class Dropdown extends PureComponent {
     disabledItemColor: PropTypes.string,
     baseColor: PropTypes.string,
 
-    itemTextStyle: Text.propTypes.style,
+    itemTextStyle: TextPropTypes.style,
 
     itemCount: PropTypes.number,
     itemPadding: PropTypes.number,
