@@ -5,10 +5,9 @@ import {
   TextInput,
   Animated,
   StyleSheet,
-  Platform,
-  ViewPropTypes,
+  Platform
 } from 'react-native';
-import { TextPropTypes } from 'deprecated-react-native-prop-types';
+import { TextPropTypes, ViewPropTypes } from 'deprecated-react-native-prop-types';
 
 import Line from '../line';
 import Label from '../label';
