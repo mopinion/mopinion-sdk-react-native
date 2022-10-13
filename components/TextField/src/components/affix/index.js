@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
-import { Animated, Text } from 'react-native';
+import { Animated } from 'react-native';
+import { TextPropTypes } from 'deprecated-react-native-prop-types';
 
 import styles from './styles';
 
@@ -11,7 +12,7 @@ export default class Affix extends PureComponent {
 
   static propTypes = {
     numberOfLines: PropTypes.number,
-    style: Text.propTypes.style,
+    style: TextPropTypes.style,
 
     color: PropTypes.string.isRequired,
     fontSize: PropTypes.number.isRequired,

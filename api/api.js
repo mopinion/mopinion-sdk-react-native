@@ -33,9 +33,8 @@ var api = {
 		AsyncStorage.setItem('deployment', JSON.stringify(deployment));
 		return true;
 	},
-	getDeployment(mopinionKey, debug) {
-		const url = debug ? 'https://ca600dcf.ngrok.io/pastease/mobile/compact/'+mopinionKey : 'https://mjolnir.mopinion.com/pastease/mobile/compact/'+mopinionKey;
-		console.log(url);
+	getDeployment(mopinionKey) {
+		const url = 'https://mjolnir.mopinion.com/pastease/mobile/compact/'+mopinionKey;
 		return fetch(url)
 			.then((response) => response.json())
 			.then((json) => {

@@ -135,7 +135,7 @@ export class Mopinion extends React.Component {
  	//Fetch form data from API async and set state
  	async fetchConfig(callbackConfigWasLoaded) {
 
-		const config = `https://${this.props.form.domain}/survey/public/json-stream?key=${this.props.form.formKey}`;
+		const config = `https://cacheorcheck.mopinion.com/survey/public/json-stream?key=${this.props.form.formKey}&domain=${this.props.form.domain}`;
 		const thisRef = this;
 
 		fetch(config, {
@@ -588,107 +588,6 @@ export class Mopinion extends React.Component {
 		}
 	}
 
-	//Function for posting feedback to api as formdata
-	postFeedback() {
-
-		const objectToFormData = (formData, obj, previousKey) => {
-			if (obj instanceof Object) {
-				getKeys(obj).forEach((key) => {
-					const value = obj[key];
-					if (value instanceof Object && !Array.isArray(value)) {
-						return objectToFormData(formData, value, key);
-					}
-					if (previousKey) {
-						key = `${previousKey}[${key}]`;
-					}
-					if (Array.isArray(value)) {
-						value.forEach((val,i) => {
-							return objectToFormData(formData,val,`${key}[${i}]`);
-						});
-					} else {
-						formData.append(key, value);
-					}
-				});
-				return formData
-			}
-		};
-
-		const domain = this.state.formConfig.sendOptions.domain;
-		const url = `https://${domain}/survey/public/send`;
-
-		const feedback = this.state.formConfig.sendOptions.data.reduce( (feedback,block) => {
-			const feedbackObj = this.state.elements.filter( (o) => {
-				return block.field.indexOf(o.field) > -1
-			})[0];
-
-			let feedbackValue = '';
-			if (typeof feedbackObj === 'object') {
-				if (feedbackObj.sub && block.field.indexOf('contact') > -1) {
-
-					const currentSubKey = getKeys(feedbackObj.sub).filter((subKey) => {
-						return feedbackObj.sub[subKey].field == block.field
-					})[0];
-					feedbackValue = feedbackObj.sub[currentSubKey] ? feedbackObj.sub[currentSubKey].value : '';
-
-				} else if (block.field.indexOf('checkbox') > -1) {
-
-					try {
-						feedbackValue = feedbackObj.value.filter((o) => {
-							return o.field == block.field
-						}).length ? true : false;
-					} catch(e) {
-						feedbackValue = false;
-					}
-
-				} else {
-					feedbackValue = feedbackObj.value || '';
-				}
-			}
-
-			feedback.push( {
-				label:block.field,
-				value:feedbackValue	,
-				type:block.type
-			});
-			return feedback;
-		},[]);
-
-		const data = {
-			token: this.state.formConfig.sendOptions.token,
-			domain: domain,
-			surveyId: this.state.formConfig.properties.id,
-			ip:this.state.formConfig.cip,
-			data: {feedback:feedback}
-		};
-
-		const formData = objectToFormData(new FormData(), data);
-		const thisReference = this;
-
-		//console.log('Posting formdata',formData);
-
-		fetch(url, {
-			method: 'POST',
-			headers: new Headers({
-				'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8',
-				'token': this.state.formConfig.sendOptions.token
-			}),
-			body: formData
-		}).then(function(response) {
-			logger.log(response);
-			// Convert to JSON
-			return response.json();
-		}).then(function(json){
-			if (json.code == 200) {
-				thisReference.setState({formStatus:'done-posting'}, () => {
-					setTimeout(() => {thisReference.setState({formIsFullySubmmitted:true})},300)
-				})
-			}
-
-		}).catch(function(err) {
-			//console.log(err); //:(
-		});
-	}
-
   	mopinionEvent(id) {
 		this.props.mopinionEvent(id);
 	}
@@ -800,7 +699,7 @@ export class Mopinion extends React.Component {
 						feedbackValue = '';
 					}
 				} else {
-					feedbackValue = feedbackObj.value || '';
+					feedbackValue = String(feedbackObj.value) || '';
 				}
 			}
 
@@ -1040,7 +939,6 @@ export class Mopinion extends React.Component {
 			>
 				<Modal
 					ref={"mopinion"}
-					backdrop={true}
 					style={styles.modal}
 					isOpen={this.state.modalVisible}
 					swipeToClose={false}
