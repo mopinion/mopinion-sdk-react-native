@@ -29,10 +29,10 @@ export default class MopinionDeployment extends React.Component {
 	}
 	async componentDidMount() {
 		if (!this.state.deployment.length) this.fetchDeployment();
-		AppState.addEventListener('change', this._handleAppStateChange);
+		this.changeAppStateSubscription = AppState.addEventListener('change', this._handleAppStateChange);
 	}
 	componentWillUnmount() {
-		AppState.removeEventListener('change', this._handleAppStateChange);
+		this.changeAppStateSubscription?.remove();
 	}
 	_handleAppStateChange = (nextAppState) => {
     if (this.state.appState.match(/inactive|background/) && nextAppState === 'active') {
