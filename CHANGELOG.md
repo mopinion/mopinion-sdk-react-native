@@ -1,3 +1,5 @@
+# 2.1.2
+- Pass the SDK version as feedback
 # 2.1.1
 - Fix issues with deprecated text and view proptypes by using `deprecated-react-native-prop-types`
 - Allow 0 values as feedback - fixes an issue where 0 scores in NPS blocks weren't posted as feedback
