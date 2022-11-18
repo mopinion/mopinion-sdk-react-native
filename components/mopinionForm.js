@@ -11,6 +11,7 @@ import Header from './Header';
 import FormPage from './FormPage';
 import { ThemeProvider } from '../core/ThemeProvider';
 
+import { getVersion } from '../utils/Helpers';
 import { getKeys } from '../utils/getKeys';
 
 import Track from '../utils/Track';
@@ -732,6 +733,12 @@ export class Mopinion extends React.Component {
 			type: 'viewport',
 			value: this.props.screenSize,
 			label: 'Viewport'
+		});
+
+		data.push({
+			type: 'category',
+			value: `Mopinion React Native SDK ${getVersion()}`,
+			label: 'SDK version'
 		});
 
 		// make complete API post

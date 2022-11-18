@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { logger } from '../api/logger';
+import { version as sdkVersion }  from '../package.json';
 
 /* eslint-disable indent */
 
@@ -90,3 +91,6 @@ export function createRandomId(len=35,bits=36) {
   return outStr;
 }
 
+export function getVersion() {
+  return sdkVersion ?? null;
+}
