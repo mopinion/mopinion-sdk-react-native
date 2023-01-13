@@ -144,7 +144,7 @@ class Control extends Component {
       outerStyle.backgroundColor = outerColor;
     } 
 
-    let labelStyle = {color:theme.textColorDark};
+    let labelStyle = {color:theme.darkTextColor};
     return (
       <Ripple 
         style={styles.ripple} 
