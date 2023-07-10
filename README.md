@@ -1,4 +1,4 @@
-[![license](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://github.com/usabilla/usabilla-u4a-react-native/blob/develop/LICENSE)
+[![license](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://github.com/mopinion/mopinion-sdk-react-native/blob/master/LICENSE)
 
 
 # Mopinion for React Native
