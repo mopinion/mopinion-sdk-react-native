@@ -1,38 +1,69 @@
+# 3.0.0
+
+- Breaking: requires react-native 0.60.0 and react 16.8.0
+- Massive refactor and cleanup
+- Implement 'slide-in' display type functionality
+- Implement 'link block'
+- Implement 'multimedia block'
+- Implement empty page skip functionality
+- Implement autopost and pageskip on last answer given functionality
+- Implement tooltip functionality
+- Implement 'other option' functionality for category question types
+- Implement 'randomize' functionality for category question types
+- Implement legend functionality for rating types
+- Align UX with other SDKs and web functionality
+- Implement KeyboardAwareScrollView for handling keyboard and scrollview issues
+- Remove any outdated/deprecated functionality (usage of string refs and PropTypes)
+
+# 2.1.4
+
+- Fix an issue in `Rating` where NPS scores had a maximum value of 9
+
 # 2.1.3
+
 - Fix an issue in `Rating` where swiping past all options could cause undefined values
 
 # 2.1.2
+
 - Pass the SDK version as feedback
-- 
+-
+
 # 2.1.1
+
 - Fix issues with deprecated text and view proptypes by using `deprecated-react-native-prop-types`
 - Allow 0 values as feedback - fixes an issue where 0 scores in NPS blocks weren't posted as feedback
 - Update API URL for fetching form configuration
 - Remove unused function and testing URL
+
 # 2.1.0
+
 - Add Mopinion Metrics
 - Webform autoclose
 
 # 2.0.1
+
 - MIME JPEG fix
 - Feedback API URL change
 
 # 2.0.0
+
 - Implement upload screenshot functionality through `react-native-image-picker`
 - Update dependency from deprecated `@react-native-community/async-storage` to `@react-native-async-storage/async-storage`
 - Remove deprecated `react-native-material-textfield` and `react-native-material-dropdown` depedencies, fork them and modify to fix issues with newer RN versions and import into package
 - Fix percentage test in `TestRuleConditions.percentage`
 - Fix rating labels in `Rating` component
-  
+
 # 1.4.1
+
 - Pass Content-Type header when submitting feedback, fixes api post in Android
 
 # 1.4.0
+
 - Implement `fireWhenReady` prop
 - Document `modalAnimationDuration` prop
 
-
 # 1.3.0
+
 - Fix for rating label heights
 - Thanks page margins
 - Update dependencies for TextField and Dropdown components
@@ -41,9 +72,11 @@
 - Lower elevation on Android
 
 # 1.2.3
+
 - Fix UserAgent fetching using a WebView
 
 # 1.2.2
+
 - Rename deprecated component lifecycle methods
 - Make onFeedbackSent prop work with webview forms
 
@@ -59,7 +92,6 @@
 
 - Add onDeploymentLoaded prop
 
-
 # 1.0.1
 
 - Fixed webview named import
@@ -67,52 +99,52 @@
 
 # 1.0.0
 
-- Breaking change: fixed deprecated imports of AsyncStorage and WebView 
+- Breaking change: fixed deprecated imports of AsyncStorage and WebView
 - Breaking change: moved rnpm linking of assets to react-native.config.js
 - Added onOpen, onFormLoaded, onFeedbackSent and onClose props
 
 # 0.3.3
 
-- [X] Increase header elevation on Android
+- [x] Increase header elevation on Android
 
 # 0.3.2
 
-- [X] Use SafeAreaView to display content in safe area's only
-- [X] Fix checkbox and radio button issues in Android
-- [X] Enhanced keyboard handling
+- [x] Use SafeAreaView to display content in safe area's only
+- [x] Fix checkbox and radio button issues in Android
+- [x] Enhanced keyboard handling
 
 # 0.3.0
 
-- [X] Add metaData prop
-- [X] Bug fix posting correct fields to api
-- [X] Enhancment to form opening
-- [X] Remove deprecated BackAndroid from code 
+- [x] Add metaData prop
+- [x] Bug fix posting correct fields to api
+- [x] Enhancment to form opening
+- [x] Remove deprecated BackAndroid from code
 
 # 0.2.5
 
-- [X] Add Changelog
+- [x] Add Changelog
 
 # 0.2.4
 
-- [X] Fix for fetching userAgent in Android
+- [x] Fix for fetching userAgent in Android
 
 # 0.2.3
 
-- [X] Fix for Object.keys quirks Android Studio
+- [x] Fix for Object.keys quirks Android Studio
 
 # 0.2.2
 
-- [X] Fix elevation in Android
+- [x] Fix elevation in Android
 
 # 0.2.1
 
-- [X] Add backbutton handler for Android
-- [X] Form height issues Android
+- [x] Add backbutton handler for Android
+- [x] Form height issues Android
 
 # 0.2
 
-- [X] Added form logic!
+- [x] Added form logic!
 
 # 0.1.0
 
-- [X] Initial release
+- [x] Initial release

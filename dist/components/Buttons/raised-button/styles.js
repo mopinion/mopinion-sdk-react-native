@@ -1,0 +1,1 @@
+Object.defineProperty(exports,"__esModule",{value:true});exports.styles=void 0;var _reactNative=require("react-native");var _styles=require("../../../styles");var styles=exports.styles=_reactNative.StyleSheet.create({container:Object.assign({height:40,paddingHorizontal:(0,_styles.spacing)(2)},_reactNative.Platform.select({android:{elevation:2}}))});
