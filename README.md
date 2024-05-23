@@ -15,7 +15,7 @@ npm install mopinion-react-native-sdk --save
 2. Link icon font
 
 ```
-npx react-native-asset -asset node_modules/@mopinion/react-native-sdk/assets/fonts
+npx react-native-asset -asset node_modules/mopinion-react-native-sdk/assets/fonts
 ```
 
 3. Install peerDependencies, these have to be installed separately because they require linking of native modules.
