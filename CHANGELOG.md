@@ -1,3 +1,7 @@
+# 3.0.1
+
+- Minor readme tweak
+
 # 3.0.0
 
 - Breaking: requires react-native 0.60.0 and react 16.8.0
