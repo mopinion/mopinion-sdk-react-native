@@ -1,3 +1,14 @@
+# 3.1.0
+
+- Fix rtl language issues with `Rating` component
+- Allow multiline in `DropDown`
+- Fix alignment of the `DropDown` menu
+
+# 3.0.2
+
+- Re-implement onFeedbackSent callback
+- Fix onClose callback
+
 # 3.0.1
 
 - Minor readme tweak
