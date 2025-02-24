@@ -1,3 +1,11 @@
+# 3.1.1
+
+- properly handle RTL in TextField component
+- Force ltr for Branding
+- Allow hiding branding
+- Include type declarations in package
+- refactor testRuleConditions and implement session based percentage
+
 # 3.1.0
 
 - Fix rtl language issues with `Rating` component
