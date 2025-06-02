@@ -1,3 +1,7 @@
+# 3.1.2
+
+- Fix usage of removed `BackHandler.removeEventListener` method
+
 # 3.1.1
 
 - properly handle RTL in TextField component
