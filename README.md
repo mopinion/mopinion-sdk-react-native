@@ -12,31 +12,62 @@ To install the Mopinion SDK into your React Native Application:
 npm install mopinion-react-native-sdk --save
 ```
 
-2. Link icon font
+2. Install dev dependencies, this is required since the SDK uses optional dependencies. **(Breaking change in 4.0.0)**
+
+```
+npm install babel-plugin-optional-require --save-dev
+```
+
+3. Update `babel.config.js` to use the optional require plugin. **(Breaking change in 4.0.0)**
+
+```
+{
+  plugins: [
+    'babel-plugin-optional-require'
+  ]
+}
+```
+
+4. Link icon font
 
 ```
 npx react-native-asset -asset node_modules/mopinion-react-native-sdk/assets/fonts
-```
-
-3. Install peerDependencies, these have to be installed separately because they require linking of native modules.
 
 ```
-npm install @react-native-async-storage/async-storage react-native-webview react-native-view-shot react-native-image-picker  --save
-```
 
-4. Install native modules:
+5. Install peerDependencies, these have to be installed separately because they require linking of native modules.
 
 ```
+
+npm install @react-native-async-storage/async-storage react-native-webview --save
+
+```
+
+6. Install optional dependencies, if you use the screenshot functionality at least one of these is required.
+
+```
+
+npm install --save react-native-view-shot react-native-image-picker --save
+
+```
+
+7. Install native modules:
+
+```
+
 cd ios && bundle exec pod install
+
 ```
 
 _When using the image upload functionality._
 
-The SDK allows users to pick an image from her/his device to upload as a screenshot. To enable this on iOS, make sure to add the `Privacy - Photo Library Usage Description` permission to the `Info.plist` of your app in Xcode:
+The SDK may allow users to pick an image from her/his device to upload as a screenshot. To enable this on iOS, make sure to add the `Privacy - Photo Library Usage Description` permission to the `Info.plist` of your app in Xcode:
 
 ```
+
 <key>NSPhotoLibraryUsageDescription</key>
 <string>To use an image from your library as a screenshot</string>
+
 ```
 
 ## Implementing the SDK
@@ -44,7 +75,9 @@ The SDK allows users to pick an image from her/his device to upload as a screens
 Import the `MopinionDeployment` component in your main app file:
 
 ```
+
 import { MopinionDeployment } from 'mopinion-react-native-sdk'
+
 ```
 
 Add a `<MopinionDeployment />` component with your deployment ID to the top level of your app structure:
@@ -53,14 +86,14 @@ Add a `<MopinionDeployment />` component with your deployment ID to the top leve
 
 function YourApp() {
 	//...
-	return (
-		<TopLevel>
-			{
-				//app content
-			}
-			<MopinionDeployment deploymentID="YOUR_DEPLOYMENT_ID" />
-		</TopLevel>
-	);
+  return (
+   <TopLevel>
+      {
+      	//app content
+      }
+      <MopinionDeployment deploymentID="YOUR_DEPLOYMENT_ID" />
+   </TopLevel>
+  );
 }
 
 ```
@@ -70,6 +103,7 @@ Trigger events from anywhere you might want to show a form.
 _Pro tip, preemptively implement event calls in relevant places throughout your application so other teams working with Mopinion can easily add or remove forms via the Mopinion platform without changes to your app code. Forms are only shown if the event matches parameters defined in your deployment._
 
 ```
+
 import { MopinionSDK } from 'mopinion-react-native-sdk';
 
 //...
@@ -77,9 +111,10 @@ import { MopinionSDK } from 'mopinion-react-native-sdk';
 <PurchaseButton
 	onPress={() => {
 		handlePurchase();
-		MopinionSDK.event('purchase_completed);
+		MopinionSDK.event('purchase_completed');
 	}}
 />
+
 ```
 
 ### Passing meta data from your app into Mopinion forms
@@ -87,16 +122,18 @@ import { MopinionSDK } from 'mopinion-react-native-sdk';
 You can send an object of data along with the feedback sent by your users using the `metaData` prop. This is useful for passing along various metadata that you might want to have linked to a users feedback.
 
 ```
+
 <MopinionDeployment
-	//required
-	deploymentID={'YOUR_ID_HERE'}
-	//optional
-	metaData={{
-		meta:'value',
-		meta2:'value2',
-		meta3:'value3'
-	}}
+   //required
+   deploymentID={'YOUR_ID_HERE'}
+   //optional
+   metaData={{
+      meta:'value',
+      meta2:'value2',
+      meta3:'value3'
+   }}
 />
+
 ```
 
 ### Properties
@@ -115,3 +152,7 @@ You can send an object of data along with the feedback sent by your users using 
 ## Support
 
 Mopinion For React Native is maintained by the Mopinion Development Team. For support contact support@mopinion.com
+
+```
+
+```

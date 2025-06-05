@@ -1,3 +1,8 @@
+# 4.0.0
+
+- Breaking: now requires `babel-plugin-optional-require` as dev dependency
+- Make `react-native-view-shot` and `react-native-image-picker` optional dependencies
+
 # 3.1.2
 
 - Fix usage of removed `BackHandler.removeEventListener` method

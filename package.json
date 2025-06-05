@@ -6,7 +6,7 @@
     "url": "https://github.com/mopinion/mopinion-sdk-react-native.git"
   },
   "homepage": "https://github.com/mopinion/mopinion-sdk-react-native#readme",
-  "version": "3.1.2",
+  "version": "4.0.0",
   "license": "MIT",
   "peerDependencies": {
     "react": ">16.8.0",
@@ -14,7 +14,16 @@
     "react-native-image-picker": ">7.0.0",
     "react-native-view-shot": ">3.0.0",
     "@react-native-async-storage/async-storage": "*",
-    "react-native-webview": "*"
+    "react-native-webview": "*",
+    "babel-plugin-optional-require": ">=0.3.0"
+  },
+  "peerDependenciesMeta": {
+    "react-native-image-picker": {
+      "optional": true
+    },
+    "react-native-view-shot": {
+      "optional": true
+    }
   },
   "keywords": [
     "mopinion",
