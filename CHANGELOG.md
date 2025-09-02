@@ -1,3 +1,7 @@
+# 4.0.1
+
+- Inject metaData before content loaded in webview forms
+
 # 4.0.0
 
 - Breaking: now requires `babel-plugin-optional-require` as dev dependency
