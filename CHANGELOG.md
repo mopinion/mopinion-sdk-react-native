@@ -1,3 +1,14 @@
+# 4.1.0
+
+- Implement the possibility to pass a colorScheme prop for initializing dark/light/auto mode
+- Improve theming and default colors
+- Make required changes in components to support the new color scheme functionality
+- Align theme colors and form styles with web
+- Align bar rating with web
+- Improvements to the dropdown component
+- Use tintColor to color images to reduce the amount of images with 50%
+- Fix an issue where the button label for next and previous buttons were not taken from the right properties in the config
+
 # 4.0.1
 
 - Inject metaData before content loaded in webview forms

@@ -24,6 +24,7 @@ declare module '@mopinion/react-native-sdk' {
       formName: string;
       feedback: FeedbackData[];
     }) => void;
+    colorScheme?: 'light' | 'dark' | 'system' | null;
   }
 
   class MopinionDeployment extends React.Component<MopinionDeploymentProps> {}
